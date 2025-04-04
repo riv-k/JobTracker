@@ -1,12 +1,19 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
 
-<div class="page">
-    <header>
+<div class="main-page">
+    <header class="title">  
         <h1>My Jobs</h1>
+        <button class="add-job" @onclick="AddJob">+Add Job</button>
     </header>
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
+    <main class="main-content">
+        @Body
     </main>
 </div>
+
+@code {
+    private void AddJob()
+    {
+        JS.InvokeVoidAsync("alert", "Button clicked!");
+    }
+}
