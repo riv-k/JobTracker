@@ -1,10 +1,42 @@
-﻿@* Page Routing *@
-@page "/"
+﻿@page "/"
+@using JobTracker.Models
 
-<div class="blue-background">
-    <p> this is the main body!!</p>
+<div class="main-content">
+    @foreach (var container in jobStatusContainers)
+    {
+        <div class="status-container">
+            <p>@container.Status</p>
+            @foreach (var job in container.JobApplications)
+            {
+                <div class="job-application" draggable="true" >
+                    <h4>@job.CompanyName</h4>
+                    <p>@job.RoleName</p>
+                    <p>@job.DateApplied</p>
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @code {
+    private List<JobStatusContainer> jobStatusContainers;
 
+    protected override void OnInitialized()
+    {
+        jobStatusContainers = new List<JobStatusContainer>
+        {
+            new JobStatusContainer("Interested"),
+            new JobStatusContainer("Applied"),
+            new JobStatusContainer("Interview"),
+            new JobStatusContainer("Offer"),
+            new JobStatusContainer("Rejected")
+        };
+
+        // dummy job applications
+        jobStatusContainers[0].AddJobApplication(new JobApplication("Company A", "Role 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume"));
+        jobStatusContainers[1].AddJobApplication(new JobApplication("Company B", "Role 2", "Job description", "Applied", DateTime.Now, "https:example.com/job2", "/path/to/resume"));
+    }
+
+    
+   
 }

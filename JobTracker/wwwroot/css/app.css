@@ -27,7 +27,7 @@ html, body {
 }
 
 .title {
-    height: 20%;
+    height: 13%;
     padding: 3%;
     display: flex;
     align-items: center;
@@ -38,18 +38,60 @@ html, body {
     border-width: 1px;*/
 }
 
-.main-content {
-    padding: 3%;
+.add-job {
+    background-color: #2980B9;
+    padding: 0.7em 2.0em;
+    border-radius: 15px;
+    border: none;
+    max-width: 15%; 
+    min-width: 100px;
+    width: 100%;
+    font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+}
+.main-content-container {
+    padding: 2%;
     height: 80%;
     background-color: #3498DB;
-/*    border-style: solid;
+    /*    border-style: solid;
     border-color: yellow;
     border-width: 1px;*/
 }
-.add-job {
-    background-color: #2980B9;
-    padding: 20px 45px;
+
+.main-content {
+    height: 100%;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1em;
+/*    padding: 1em;*/
+    scrollbar-color: white transparent; 
+    scrollbar-width: thin;
+
+/*    border-style: solid;
+    border-color: white;
+    border-width: 1px;*/
+}
+
+.status-container {
+    min-width: 300px;
+    height: 100%;
+    /*    border: 1px solid gray;*/
+    border-radius: 10px;
+    padding: 1em;
+    background-color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.job-application {
+    display: flex;
+    flex-direction: column;
+    background-color: #ECF0F1;
     border-radius: 15px;
+    padding: 10px;
+
+/*    border-style: solid;
+    border-color: black;
+    border-width: 1px;*/
 }
 /*Do not delete*/
 .status-bar-safe-area {
