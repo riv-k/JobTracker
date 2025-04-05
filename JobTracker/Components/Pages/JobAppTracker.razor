@@ -2,6 +2,7 @@
 @using JobTracker.Models
 
 <div class="main-content">
+    @* Loading in status containers and population them with job applications *@
     @foreach (var container in jobStatusContainers)
     {
         <div class="status-container">
@@ -10,7 +11,7 @@
             {
                 <div class="job-application" draggable="true" >
                     <h4>@job.CompanyName</h4>
-                    <p>@job.RoleName</p>
+                    <p>@job.JobTitle</p>
                     <p>@job.DateApplied</p>
                 </div>
             }
@@ -33,8 +34,8 @@
         };
 
         // dummy job applications
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company A", "Role 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume"));
-        jobStatusContainers[1].AddJobApplication(new JobApplication("Company B", "Role 2", "Job description", "Applied", DateTime.Now, "https:example.com/job2", "/path/to/resume"));
+        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
+        jobStatusContainers[1].AddJobApplication(new JobApplication("Company B", "Job OMG BIG WOWwwwwwwwwwwwwwwwwwwww 2", "Job description", "Applied", DateTime.Now, "https:example.com/job2", "/path/to/resume", "Manukau City"));
     }
 
     

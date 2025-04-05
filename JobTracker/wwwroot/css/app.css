@@ -1,5 +1,4 @@
-﻿/*My css*/
-html, body {
+﻿html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #2C3E50;
     margin: 0;
@@ -10,9 +9,6 @@ html, body {
 #app {
     height: 100vh;
     padding: 40px;
-/*    border-style: solid;
-    border-color: purple;
-    border-width: 10px;*/
 }
 
 .main-page {
@@ -21,9 +17,6 @@ html, body {
     display: flex;
     flex-direction: column;
     overflow: hidden;     
-/*    border-style: solid;
-    border-color: pink;
-    border-width: 1px;*/
 }
 
 .title {
@@ -33,9 +26,6 @@ html, body {
     align-items: center;
     justify-content: space-between;
     background-color: #DFE8F6;
-/*    border-style: solid;
-    border-color: blue;
-    border-width: 1px;*/
 }
 
 .add-job {
@@ -52,47 +42,8 @@ html, body {
     padding: 2%;
     height: 80%;
     background-color: #3498DB;
-    /*    border-style: solid;
-    border-color: yellow;
-    border-width: 1px;*/
 }
 
-.main-content {
-    height: 100%;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 1em;
-/*    padding: 1em;*/
-    scrollbar-color: white transparent; 
-    scrollbar-width: thin;
-
-/*    border-style: solid;
-    border-color: white;
-    border-width: 1px;*/
-}
-
-.status-container {
-    min-width: 300px;
-    height: 100%;
-    /*    border: 1px solid gray;*/
-    border-radius: 10px;
-    padding: 1em;
-    background-color: #FFFFFF;
-    flex-shrink: 0;
-}
-
-.job-application {
-    display: flex;
-    flex-direction: column;
-    background-color: #ECF0F1;
-    border-radius: 15px;
-    padding: 10px;
-
-/*    border-style: solid;
-    border-color: black;
-    border-width: 1px;*/
-}
 /*Do not delete*/
 .status-bar-safe-area {
     display: none;

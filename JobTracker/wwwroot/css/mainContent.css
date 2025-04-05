@@ -1,0 +1,40 @@
+
+.main-content {
+    height: 100%;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1em;
+    scrollbar-color: white transparent;
+    scrollbar-width: thin;
+}
+
+.status-container {
+    width: 300px;
+    height: 100%;
+    border-radius: 10px;
+    padding: 1em;
+    background-color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.job-application {
+    display: flex;
+    flex-direction: column;
+    background-color: #ECF0F1;
+    border-radius: 15px;
+    padding: 10px;
+    height: 150px;
+    width: 270px;
+    overflow: hidden;
+    justify-content: flex-start;
+    margin: auto;
+}
+
+
+    .job-application * {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 5px 0;
+    }
