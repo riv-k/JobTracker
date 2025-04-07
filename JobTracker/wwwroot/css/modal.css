@@ -46,7 +46,7 @@
 }
 
 .modal-header-right {
-    border: 2px solid black;
+/*    border: 2px solid black;*/
     margin: auto 0;
     margin-right: 15px;
     display: flex;
@@ -57,14 +57,52 @@
     color: white;
     width: 70px;
     height: 35px;
+    border-radius: 10px;
 }
-
 .cancel {
-    background-color: #E67E22;
+    background-color: #F44336;
+    color: white;
+    width: 70px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .save {
-    background-color: #E67E22;
+    background-color: #2ECC71;
+    color: white;
+    width: 70px;
+    height: 35px;
+    border-radius: 10px;
+    border: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
+.cancel:hover {
+    background-color: #D32F2F;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
+.save:hover {
+    background-color: #27AE60; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-body  {
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hw-row, .row {
+    border: 2px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.hw-row div{
+    width: 40%;
+    border: 2px solid black;
+}

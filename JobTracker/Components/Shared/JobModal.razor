@@ -1,35 +1,70 @@
 ﻿<div class="modal-container">
     <div class="modal-content-container">
-        <div class="modal-header"> 
+        <div class="modal-header">
             <div class="modal-header-left">
-                <h1 class="modal-header-title" >
+                <h1 class="modal-header-title">
                     Job Title
                 </h1>
 
                 <small>
                     Company Name
                 </small>
-                <small> 
-                    <b>•</b> Status 
+                <small>
+                    <b>•</b> Status
                 </small>
             </div>
 
             <div class="modal-header-right">
-                <button class="cancel" >
+                <button class="cancel">
                     Cancel
-                </button
-                <button class="save" >
+                </button>
+                <button class="save">
                     Save
                 </button>
             </div>
         </div>
 
-        <div class="modal-body" >
-            body
+        <div class="modal-body">
+
+            <div class="hw-row">
+                <input type="text" class="input" placeholder="Company Name" />
+                <input type="text" class="input" placeholder="Job Title" />
+            </div>
+
+            <div class="hw-row">
+                <input type="text" class="input" placeholder="Location" />
+                <input type="date" class="input" />
+            </div>
+
+            <div class="hw-row">
+                <select class="input">
+                    <option disabled selected>Status</option>
+                    <option>Interested</option>
+                    <option>Applied</option>
+                    <option>Interview</option>
+                    <option>Offer</option>
+                    <option>Rejected</option>
+                </select>
+                <input type="date" class="input" />
+            </div>
+
+            <div class="row">
+                <input type="url" class="input" placeholder="Link" />
+            </div>
+
+            <div class="hw-row">
+                <input type="file" class="input" />
+                <input type="file" class="input" />
+            </div>
+
+            <div class="row">
+                <textarea class="input description" placeholder="Job Description"></textarea>
+            </div>
+
         </div>
     </div>
 </div>
- 
+
 @code {
 
 }
