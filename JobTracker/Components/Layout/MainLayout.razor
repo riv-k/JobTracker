@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using JobTracker.Components.Shared
+@inherits LayoutComponentBase
 @inject IJSRuntime JS
 
 <div class="main-page">
@@ -6,9 +7,12 @@
         <h1>My Jobs</h1>
         <button class="add-job" @onclick="AddJob">+Add Job</button>
     </header>
+
     <main class="main-content-container">
         @Body
     </main>
+
+    <JobModal />
 </div>
 
 @code {
