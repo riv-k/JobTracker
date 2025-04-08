@@ -5,19 +5,26 @@
 <div class="main-page">
     <header class="title">  
         <h1>My Jobs</h1>
-        <button class="add-job" @onclick="AddJob">+Add Job</button>
+        <button class="add-job" @onclick="ShowJobModal">+Add Job</button>
     </header>
 
     <main class="main-content-container">
         @Body
     </main>
 
-    <JobModal />
+    <JobModal IsModalVisible="isModalVisible" CloseModal="CloseModal" />
 </div>
 
 @code {
-    private void AddJob()
+    private bool isModalVisible = false;
+
+    private void ShowJobModal()
     {
-        JS.InvokeVoidAsync("alert", "Button clicked!");
+        isModalVisible = true; // Show the modal when the button is clicked
+    }
+
+    private void CloseModal()
+    {
+        isModalVisible = false; // Close the modal when the user finishes
     }
 }

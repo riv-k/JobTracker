@@ -1,70 +1,147 @@
-﻿<div class="modal-container">
-    <div class="modal-content-container">
-        <div class="modal-header">
-            <div class="modal-header-left">
-                <h1 class="modal-header-title">
-                    Job Title
-                </h1>
+﻿@if (IsModalVisible){
+    <div class="modal-container">
+        <div class="modal-content-container">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <h1 class="modal-header-title">
+                        @(string.IsNullOrEmpty(jobTitleInput) ? "Job Title" : jobTitleInput)
+                    </h1>
 
-                <small>
-                    Company Name
-                </small>
-                <small>
-                    <b>•</b> Status
-                </small>
+                    <small>
+                        @(string.IsNullOrEmpty(companyNameInput) ? "Company Name" : companyNameInput)
+                    </small>
+                    <small>
+                        <b>•</b> @statusInput
+                    </small>
+                </div>
+
+                <div class="modal-header-right">
+                    <button class="cancel" @onclick="CloseJobModal">
+                        Cancel
+                    </button>
+                    <button class="save" @onclick="CloseJobModal">
+                        Save
+                    </button>
+                </div>
             </div>
 
-            <div class="modal-header-right">
-                <button class="cancel">
-                    Cancel
-                </button>
-                <button class="save">
-                    Save
-                </button>
+            <div class="modal-body">
+
+                <div class="hw-row">
+                    <div>
+                        <p>Company Name</p>
+                        <input type="text" class="input" @bind="companyNameInput" placeholder="Company Name" />
+                    </div>
+                    <div>
+                        <p>Job Title</p>
+                        <input type="text" @bind="jobTitleInput" class="input" placeholder="Job Title" />
+                    </div>
+                </div>
+
+                <div class="hw-row">
+                    <div>
+                        <p>Location</p>
+                        <input type="text" class="input" @bind="locationInput" placeholder="Location" />
+                    </div>
+                    <div>
+                        <p>Date Applied</p>
+                        <input type="date" @bind="dateAppliedInput" class="input" />
+                    </div>
+                </div>
+
+                <div class="hw-row">
+                    <div>
+                        <p>Status</p>
+                        <select class="input" @bind="statusInput" required>
+                            <option value="" disabled hidden selected>Status</option>
+                            <option>Interested</option>
+                            <option>Applied</option>
+                            <option>Interview</option>
+                            <option>Offer</option>
+                            <option>Rejected</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Closing Date</p>
+                        <input type="date" @bind="dateCloseInput" class="input" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <p>Link</p>
+                        <input type="url" class="input" @bind="linkInput" placeholder="Link" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <p>Description</p>
+                        <textarea class="input description" @bind="descriptionInput" placeholder="Job Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="hw-row">
+                    <div>
+                        <p>CV</p>
+                        <input type="file" id="fileInput" class="input" onchange="HandleCvUpload" />
+                    </div>
+                    <div>
+                        <p>Cover Letter</p>
+                        <input type="file" id="fileInput" class="input" onchange="HandleCoverLetterUpload" />
+                    </div>
+                </div>
+
+
             </div>
-        </div>
-
-        <div class="modal-body">
-
-            <div class="hw-row">
-                <input type="text" class="input" placeholder="Company Name" />
-                <input type="text" class="input" placeholder="Job Title" />
-            </div>
-
-            <div class="hw-row">
-                <input type="text" class="input" placeholder="Location" />
-                <input type="date" class="input" />
-            </div>
-
-            <div class="hw-row">
-                <select class="input">
-                    <option disabled selected>Status</option>
-                    <option>Interested</option>
-                    <option>Applied</option>
-                    <option>Interview</option>
-                    <option>Offer</option>
-                    <option>Rejected</option>
-                </select>
-                <input type="date" class="input" />
-            </div>
-
-            <div class="row">
-                <input type="url" class="input" placeholder="Link" />
-            </div>
-
-            <div class="hw-row">
-                <input type="file" class="input" />
-                <input type="file" class="input" />
-            </div>
-
-            <div class="row">
-                <textarea class="input description" placeholder="Job Description"></textarea>
-            </div>
-
         </div>
     </div>
-</div>
+
+}
+
 
 @code {
+    [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
+    [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
+
+    private string companyNameInput = "";
+    private string jobTitleInput = "";
+    private string statusInput = "Status";
+    private string locationInput = "";
+    private DateTime? dateAppliedInput { get; set; } = null;
+    private DateTime? dateCloseInput { get; set; } = null;
+    private string linkInput = "";
+    private string descriptionInput = "";
+    private IBrowserFile? cvFile;
+    private IBrowserFile? coverLetterFile;
+
+    private async Task CloseJobModal()
+    {
+        await CloseModal.InvokeAsync(); // Trigger the close modal action from the parent
+
+        cvFile = null;
+        coverLetterFile = null;
+        companyNameInput = string.Empty;
+        jobTitleInput = string.Empty;
+        statusInput = "Status";
+        locationInput = string.Empty;
+        descriptionInput = string.Empty;
+        linkInput = string.Empty;
+        dateAppliedInput = null;
+        dateCloseInput = null;
+
+
+    }
+
+    private void HandleCvUpload(InputFileChangeEventArgs e)
+    {
+        cvFile = e.File;
+        // Optional: Do something with the file here (e.g., save it, preview it, etc.)
+    }
+
+    private void HandleCoverLetterUpload(InputFileChangeEventArgs e)
+    {
+        coverLetterFile = e.File;
+    }
 
 }
