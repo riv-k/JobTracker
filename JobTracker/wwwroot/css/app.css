@@ -20,24 +20,34 @@
 }
 
 .title {
+    z-index: 1;
     height: 13%;
     padding: 3%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #DFE8F6;
+    box-shadow: 2px 2px 5px #2c3e50;
 }
 
 .add-job {
-    background-color: #2980B9;
+    background-color: #3498DB;
     padding: 0.7em 2.0em;
     border-radius: 15px;
     border: none;
-    max-width: 15%; 
+    max-width: 15%;
     min-width: 100px;
     width: 100%;
     font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 2px 2px 5px #2c3e50;
+    
 }
+    .add-job:hover {
+        background-color: #2980B9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
 .main-content-container {
     padding: 2%;
     height: 80%;
