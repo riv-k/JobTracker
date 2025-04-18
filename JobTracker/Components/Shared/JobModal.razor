@@ -1,4 +1,8 @@
-﻿@if (IsModalVisible){
+﻿@inject IJSRuntime JSRuntime
+@using JobTracker.Data
+@using JobTracker.Models
+
+@if (IsModalVisible){
     <div class="modal-container">
         <div class="modal-content-container">
             <div class="modal-header">
@@ -19,7 +23,7 @@
                     <button class="cancel" @onclick="CloseJobModal">
                         Cancel
                     </button>
-                    <button class="save" @onclick="CloseJobModal">
+                    <button class="save" @onclick="SaveJobApp">
                         Save
                     </button>
                 </div>
@@ -103,6 +107,7 @@
 @code {
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
+    [Inject] private JobApplicationDatabase JobDb { get; set; }
 
     private string companyNameInput = "";
     private string jobTitleInput = "";
@@ -114,6 +119,66 @@
     private string descriptionInput = "";
     private IBrowserFile? cvFile;
     private IBrowserFile? coverLetterFile;
+
+    private async Task SaveJobApp()
+    {
+        // if (string.IsNullOrWhiteSpace(companyNameInput) ||
+        //     string.IsNullOrWhiteSpace(jobTitleInput) ||
+        //     string.IsNullOrWhiteSpace(statusInput) || statusInput == "Status" ||
+        //     string.IsNullOrWhiteSpace(locationInput) ||
+        //     string.IsNullOrWhiteSpace(descriptionInput) ||
+        //     string.IsNullOrWhiteSpace(linkInput) ||
+        //     dateAppliedInput is null ||
+        //     dateCloseInput is null ||
+        //     cvFile is null ||
+        //     coverLetterFile is null)
+        // {
+        //     await JSRuntime.InvokeVoidAsync("alert", "Please fill in all fields and upload both files.");
+        //     return;
+        // }
+
+        //Needa fix this issue
+
+        // var cvPath = await SaveUploadedFileAsync(cvFile);
+        // var coverLetterPath = await SaveUploadedFileAsync(coverLetterFile);
+
+        var jobApp = new JobApplication
+            {
+                CompanyName = companyNameInput,
+                JobTitle = jobTitleInput,
+                Status = statusInput,
+                Location = locationInput,
+                DateApplied = dateAppliedInput!.Value,
+                DateClosing = dateCloseInput!.Value,
+                Link = linkInput,
+                Description = descriptionInput,
+                // CvFilePath = cvPath,
+                // CoverLetterFilePath = coverLetterPath
+                CvFilePath = "test",
+                CoverLetterFilePath = "test"
+            };
+
+        // await JobDb.SaveJobApplicationAsync(jobApp);
+        // await CloseJobModal();
+
+        // Call SaveJobApplicationAsync and store the result
+        var result = await JobDb.SaveJobApplicationAsync(jobApp);
+
+        // Alert the integer value returned by SaveJobApplicationAsync
+        await JSRuntime.InvokeVoidAsync("alert", $"Rows affected: {result}");
+
+        // Optionally check the result for success
+        if (result > 0)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Job Application Saved Successfully!");
+            await CloseJobModal();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Failed to Save Job Application!");
+        }
+
+    }
 
     private async Task CloseJobModal()
     {
@@ -136,12 +201,23 @@
     private void HandleCvUpload(InputFileChangeEventArgs e)
     {
         cvFile = e.File;
-        // Optional: Do something with the file here (e.g., save it, preview it, etc.)
     }
 
     private void HandleCoverLetterUpload(InputFileChangeEventArgs e)
     {
         coverLetterFile = e.File;
+    }
+
+    private async Task<string> SaveUploadedFileAsync(IBrowserFile file)
+    {
+        var fileName = $"{Guid.NewGuid()}_{file.Name}";
+        var path = Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+        using var stream = file.OpenReadStream();
+        using var fileStream = File.Create(path);
+        await stream.CopyToAsync(fileStream);
+
+        return path;
     }
 
 }
