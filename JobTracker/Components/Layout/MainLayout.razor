@@ -1,6 +1,9 @@
-﻿@using JobTracker.Components.Shared
+﻿@using JobTracker.Components.Shared  @* Should probs add these to _Imports.razor later*@
+@using JobTracker.Models
+@using JobTracker.Data
 @inherits LayoutComponentBase
 @inject IJSRuntime JS
+@inject JobApplicationDB Database
 
 <div class="main-page">
     <header class="title">  
@@ -12,11 +15,35 @@
         @Body
     </main>
 
-    <JobModal IsModalVisible="isModalVisible" CloseModal="CloseModal" />
+    <JobModal IsModalVisible="isModalVisible" 
+    CloseModal="CloseModal"
+    OnSave="HandleSaveJobApplication" />
 </div>
 
 @code {
     private bool isModalVisible = false;
+
+
+    // Call Database.SaveJobApplicationAsync(newJob); and we're set :)
+    // Copy CV, CL to local directory (incase user deletes file by accident later, then we still have a copy)
+    // file would be combination of -- FileSystem.AppDataDirectory + cv/ or cl/ + fileName -- 
+    // add something that tells user that we've added the job application to db
+    //or something similar
+
+    private async Task HandleSaveJobApplication(JobApplication newJob)
+    {
+        try
+        {
+            await Database.SaveJobApplicationAsync(newJob);
+            
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Error: {ex.Message}");
+        }
+
+    }
+
 
     private void ShowJobModal()
     {

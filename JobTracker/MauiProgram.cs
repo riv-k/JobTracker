@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using JobTracker.Data;
+using Microsoft.Extensions.Logging;
 
 namespace JobTracker
 {
@@ -13,6 +14,8 @@ namespace JobTracker
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+            // Registering DB access as a singleton
+            builder.Services.AddSingleton<JobApplicationDB>();
 
             builder.Services.AddMauiBlazorWebView();
 

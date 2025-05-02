@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobTracker.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,22 +10,22 @@ namespace JobTracker.Models;
 public class JobStatusContainer
 {
     public string Status { get; set; }
-    public List<JobApplication> JobApplications { get; set; }
+    public List<JobApplicationDTO> JobApplications { get; set; }
 
     public JobStatusContainer(string status)
     {
         Status = status;
-        JobApplications = new List<JobApplication>();
+        JobApplications = new List<JobApplicationDTO>();
     }
 
     //add a job application
-    public void AddJobApplication(JobApplication jobApplication)
+    public void AddJobApplication(JobApplicationDTO jobApplication)
     {
         JobApplications.Add(jobApplication);
     }
 
     //remove a job application
-    public void RemoveJobApplication(JobApplication jobApplication)
+    public void RemoveJobApplication(JobApplicationDTO jobApplication)
     {
         JobApplications.Remove(jobApplication);
     }

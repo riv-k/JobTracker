@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using JobTracker.Models
+@inject JobApplicationDB Database
 
 <div class="main-content">
     @* Loading in status containers and population them with job applications *@
@@ -19,11 +20,13 @@
     }
 </div>
 
+
 @code {
-    private List<JobStatusContainer> jobStatusContainers;
+    private List<JobStatusContainer> jobStatusContainers = new();
 
     protected override void OnInitialized()
     {
+        // Initialize containers synchronously
         jobStatusContainers = new List<JobStatusContainer>
         {
             new JobStatusContainer("Interested"),
@@ -33,17 +36,24 @@
             new JobStatusContainer("Rejected")
         };
 
-        // dummy job applications
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
-        jobStatusContainers[0].AddJobApplication(new JobApplication("Company Aaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Job 1", "Job description", "Interested", DateTime.Now, "https:example.com/job1", "/path/to/resume", "Auckland CBD"));
-
-
-        jobStatusContainers[1].AddJobApplication(new JobApplication("Company B", "Job OMG BIG WOWwwwwwwwwwwwwwwwwwwww 2", "Job description", "Applied", DateTime.Now, "https:example.com/job2", "/path/to/resume", "Manukau City"));
+        // Fire and forget async loading
+        _ = LoadJobApplicationsAsync();
     }
 
-    
-   
+    private async Task LoadJobApplicationsAsync()
+    {
+        var allJobs = await Database.GetJobApplicationsAsync();
+
+        foreach (var job in allJobs)
+        {
+            var container = jobStatusContainers.FirstOrDefault(c => c.Status == job.Status);
+            if (container != null)
+            {
+                container.JobApplications.Add(job);
+            }
+        }
+
+        // Notify the UI that data has changed
+        await InvokeAsync(StateHasChanged);
+    }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,23 +11,30 @@ public class JobApplication
 {
     public string CompanyName { get; set; }
     public string JobTitle { get; set; }
-    public string Description { get; set; }
-    public string Status { get; set; } // "Interested", "Applied", etc.
-    public DateTime DateApplied { get; set; }
-    public string Link { get; set; } // Link to job posting
-    public string ResumePath { get; set; } // Path to uploaded resume or cover letter
     public string Location { get; set; }
+    public DateTime DateApplied { get; set; }
+    public DateTime ClosingDate { get; set; }
+    public string Status { get; set; }
+    public string Link { get; set; }
+    public IBrowserFile? Cv { get; set; } // CV file path 
+    public IBrowserFile? Cl { get; set; } // Cover Letter file path 
+    public string Description { get; set; }
+
 
     // Constructor to initialize job application
-    public JobApplication(string companyName, string jobTitle, string description, string status, DateTime dateApplied, string link, string resumePath, string location)
+    public JobApplication(string companyName, string jobTitle, string location, DateTime dateApplied, DateTime closingDate,
+                       string status, string link, IBrowserFile? cv, IBrowserFile? cl, string description)
     {
         CompanyName = companyName;
         JobTitle = jobTitle;
-        Description = description;
-        Status = status;
-        DateApplied = dateApplied;
-        Link = link;
-        ResumePath = resumePath;
         Location = location;
+        DateApplied = dateApplied;
+        ClosingDate = closingDate;
+        Status = status;
+        Link = link;
+        Cv = cv; 
+        Cl = cl; 
+        Description = description;
     }
+
 }

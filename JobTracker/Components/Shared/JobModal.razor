@@ -1,4 +1,6 @@
-﻿@if (IsModalVisible){
+﻿@using JobTracker.Models
+
+@if (IsModalVisible){
     <div class="modal-container">
         <div class="modal-content-container">
             <div class="modal-header">
@@ -19,7 +21,7 @@
                     <button class="cancel" @onclick="CloseJobModal">
                         Cancel
                     </button>
-                    <button class="save" @onclick="CloseJobModal">
+                    <button class="save" @onclick="SaveJobModal">
                         Save
                     </button>
                 </div>
@@ -84,11 +86,11 @@
                 <div class="hw-row">
                     <div>
                         <p>CV</p>
-                        <input type="file" id="fileInput" class="input" onchange="HandleCvUpload" />
+                        <InputFile id="fileInput" class="input" onchange="HandleCvUpload" />
                     </div>
                     <div>
                         <p>Cover Letter</p>
-                        <input type="file" id="fileInput" class="input" onchange="HandleCoverLetterUpload" />
+                        <InputFile id="fileInput" class="input" onchange="HandleCoverLetterUpload" />
                     </div>
                 </div>
 
@@ -103,6 +105,8 @@
 @code {
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
+    [Parameter] public EventCallback<JobApplication> OnSave { get; set; }
+
 
     private string companyNameInput = "";
     private string jobTitleInput = "";
@@ -113,14 +117,35 @@
     private string linkInput = "";
     private string descriptionInput = "";
     private IBrowserFile? cvFile;
-    private IBrowserFile? coverLetterFile;
+    private IBrowserFile? clFile;
+
+    private async Task SaveJobModal()
+    {
+        var job = new JobApplication( // Create JobApplication Object
+            companyNameInput,
+            jobTitleInput,
+            locationInput,
+            dateAppliedInput ?? DateTime.Now, // Default to currnt date
+            dateCloseInput ?? DateTime.Now.AddDays(14), // Default closing date to 2 weeks from now
+            statusInput,
+            linkInput,
+            cvFile,  
+            clFile,
+            descriptionInput
+    );
+
+
+        await OnSave.InvokeAsync(job); // Send to parent component -- MainLayout.cs
+        await CloseJobModal(); //Clear inputs + close modal
+    }
+
 
     private async Task CloseJobModal()
     {
         await CloseModal.InvokeAsync(); // Trigger the close modal action from the parent
 
         cvFile = null;
-        coverLetterFile = null;
+        clFile = null;
         companyNameInput = string.Empty;
         jobTitleInput = string.Empty;
         statusInput = "Status";
@@ -129,19 +154,17 @@
         linkInput = string.Empty;
         dateAppliedInput = null;
         dateCloseInput = null;
-
-
     }
 
     private void HandleCvUpload(InputFileChangeEventArgs e)
     {
         cvFile = e.File;
-        // Optional: Do something with the file here (e.g., save it, preview it, etc.)
+        
     }
 
     private void HandleCoverLetterUpload(InputFileChangeEventArgs e)
     {
-        coverLetterFile = e.File;
+        clFile = e.File;
     }
 
 }
