@@ -22,10 +22,11 @@
 
 
 @code {
-    private List<JobStatusContainer> jobStatusContainers;
+    private List<JobStatusContainer> jobStatusContainers = new();
 
     protected override void OnInitialized()
     {
+        // Initialize containers synchronously
         jobStatusContainers = new List<JobStatusContainer>
         {
             new JobStatusContainer("Interested"),
@@ -35,7 +36,24 @@
             new JobStatusContainer("Rejected")
         };
 
-
+        // Fire and forget async loading
+        _ = LoadJobApplicationsAsync();
     }
 
+    private async Task LoadJobApplicationsAsync()
+    {
+        var allJobs = await Database.GetJobApplicationsAsync();
+
+        foreach (var job in allJobs)
+        {
+            var container = jobStatusContainers.FirstOrDefault(c => c.Status == job.Status);
+            if (container != null)
+            {
+                container.JobApplications.Add(job);
+            }
+        }
+
+        // Notify the UI that data has changed
+        await InvokeAsync(StateHasChanged);
+    }
 }

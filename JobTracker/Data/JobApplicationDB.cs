@@ -1,57 +1,103 @@
-﻿using JobTracker.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Maui.Storage;
 using SQLite;
+using JobTracker.Models;
+
+
 
 namespace JobTracker.Data;
 
 public class JobApplicationDB
 {
-    SQLiteAsyncConnection database;
+    private SQLiteAsyncConnection database;
 
-    // Initialize the database connection and create the table if it doesn't exist
-    async Task Init()
+    //public JobApplicationDB()
+    //{
+    //    // Initialize the database in the background
+    //    _ = Init();
+    //}
+
+    private async Task Init()
     {
-        if (database is not null)
+        if (database != null)
             return;
 
         database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-        var result = await database.CreateTableAsync<JobApplication>();
+        await database.CreateTableAsync<JobApplicationDTO>();
     }
+
 
     // Retrieve all job applications
-    public async Task<List<JobApplication>> GetJobApplicationsAsync()
+    public async Task<List<JobApplicationDTO>> GetJobApplicationsAsync()
     {
         await Init();
-        return await database.Table<JobApplication>().ToListAsync();
-    }
-
-    // Retrieve job applications by status 
-    public async Task<List<JobApplication>> GetJobApplicationsByStatusAsync(string status)
-    {
-        await Init();
-        return await database.Table<JobApplication>().Where(j => j.Status == status).ToListAsync();
+        return await database.Table<JobApplicationDTO>().ToListAsync();
     }
 
     // Retrieve a job application by ID
-    public async Task<JobApplication> GetJobApplicationByIdAsync(int id)
+    public async Task<JobApplicationDTO?> GetJobApplicationByIdAsync(int id)
     {
         await Init();
-        return await database.Table<JobApplication>().Where(j => j.Id == id).FirstOrDefaultAsync();
+        return await database.Table<JobApplicationDTO>()
+                             .Where(j => j.Id == id)
+                             .FirstOrDefaultAsync();
     }
 
-    // Save/Create/Update job application 
-    public async Task<int> SaveJobApplicationAsync(JobApplication jobApplication)
+    // Save a new job application
+    public async Task SaveJobApplicationAsync(JobApplication app)
     {
         await Init();
-        if (jobApplication.Id != 0) 
-            return await database.UpdateAsync(jobApplication);
-        else
-            return await database.InsertAsync(jobApplication);
+
+        // Save any uploaded files and get local paths
+        string? cvPath = null;
+        string? clPath = null;
+
+        if (app.Cv != null)
+            cvPath = await SaveFileToLocalAsync(app.Cv, "cv");
+        if (app.Cl != null)
+            clPath = await SaveFileToLocalAsync(app.Cl, "cl");
+
+        var dto = new JobApplicationDTO
+        {
+            CompanyName = app.CompanyName,
+            JobTitle = app.JobTitle,
+            Status = app.Status,
+            Location = app.Location,
+            DateApplied = app.DateApplied,
+            ClosingDate = app.ClosingDate,
+            Link = app.Link,
+            Description = app.Description,
+            CVPath = cvPath,
+            CLPath = clPath
+        };
+
+        await database.InsertAsync(dto);
     }
 
-    // Delete job application
-    public async Task<int> DeleteJobApplicationAsync(JobApplication jobApplication)
+    // Delete a job application by DTO ID
+    public async Task<int> DeleteJobApplicationAsync(int id)
     {
         await Init();
-        return await database.DeleteAsync(jobApplication);
+        return await database.DeleteAsync<JobApplicationDTO>(id);
+    }
+
+    // Helper: saves an IBrowserFile to subfolder and returns the file path
+    private async Task<string> SaveFileToLocalAsync(IBrowserFile file, string subfolder)
+    {
+        var folderPath = Path.Combine(FileSystem.AppDataDirectory, subfolder);
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        var filePath = Path.Combine(folderPath, file.Name);
+
+        using var stream = file.OpenReadStream();
+        using var fs = File.Create(filePath);
+        await stream.CopyToAsync(fs);
+
+        return filePath;
     }
 }
