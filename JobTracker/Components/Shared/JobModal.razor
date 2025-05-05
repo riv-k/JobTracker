@@ -106,6 +106,7 @@
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
     [Parameter] public EventCallback<JobApplication> OnSave { get; set; }
+    [Parameter] public JobApplicationDTO? JobData { get; set; } // parameter to recieve job application info/data
 
 
     private string companyNameInput = "";
@@ -119,6 +120,21 @@
     private IBrowserFile? cvFile;
     private IBrowserFile? clFile;
 
+    protected override void OnParametersSet()
+    {
+        // When parameters change and JobData is not null, populate form fields
+        if (JobData != null)
+        {
+            companyNameInput = JobData.CompanyName;
+            jobTitleInput = JobData.JobTitle;
+            statusInput = JobData.Status;
+            locationInput = JobData.Location;
+            dateAppliedInput = JobData.DateApplied;
+            dateCloseInput = JobData.ClosingDate;
+            linkInput = JobData.Link;
+            descriptionInput = JobData.Description;
+        }
+    }
     private async Task SaveJobModal()
     {
         var job = new JobApplication( // Create JobApplication Object
@@ -133,6 +149,12 @@
             clFile,
             descriptionInput
     );
+        // If we're editing an existing job, preserve its ID
+        if (JobData != null && JobData.Id != 0)
+        {
+            // Assuming there's a way to set the ID - implementation depends on JobApplication structure
+            // job.Id = JobData.Id;
+        }
 
 
         await OnSave.InvokeAsync(job); // Send to parent component -- MainLayout.cs
@@ -143,7 +165,11 @@
     private async Task CloseJobModal()
     {
         await CloseModal.InvokeAsync(); // Trigger the close modal action from the parent
+        ResetForm();
+    }
 
+    private void ResetForm()
+    {
         cvFile = null;
         clFile = null;
         companyNameInput = string.Empty;
@@ -155,6 +181,7 @@
         dateAppliedInput = null;
         dateCloseInput = null;
     }
+
 
     private void HandleCvUpload(InputFileChangeEventArgs e)
     {

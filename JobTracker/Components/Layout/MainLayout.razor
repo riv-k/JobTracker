@@ -1,34 +1,41 @@
 ﻿@using JobTracker.Components.Shared  @* Should probs add these to _Imports.razor later*@
 @using JobTracker.Models
 @using JobTracker.Data
+@inject JobApplicationDB Database
 @inherits LayoutComponentBase
 @inject IJSRuntime JS
-@inject JobApplicationDB Database
 
 <div class="main-page">
+
     <header class="title">  
         <h1>My Jobs</h1>
-        <button class="add-job" @onclick="ShowJobModal">+Add Job</button>
+        <button class="add-job" @onclick="() => ShowJobModal()">+Add Job</button>
     </header>
 
-    <main class="main-content-container">
-        @Body
-    </main>
+    <CascadingValue Name="ShowJobModalCallback" Value="@ShowJobModalAction" IsFixed="true">
+        <main class="main-content-container">
+            @Body
+        </main>
+    </CascadingValue>
 
-    <JobModal IsModalVisible="isModalVisible" 
-    CloseModal="CloseModal"
-    OnSave="HandleSaveJobApplication" />
+    <JobModal 
+        IsModalVisible="isModalVisible" 
+        CloseModal="CloseModal"
+        OnSave="HandleSaveJobApplication"
+        JobData="selectedJob" />
+
 </div>
 
 @code {
     private bool isModalVisible = false;
+    private JobApplicationDTO? selectedJob = null;
 
+    // Create an Action delegate that can be passed to child components
+    private Action<JobApplicationDTO?> ShowJobModalAction => (job) =>
+    {
+        ShowJobModal(job);
+    };
 
-    // Call Database.SaveJobApplicationAsync(newJob); and we're set :)
-    // Copy CV, CL to local directory (incase user deletes file by accident later, then we still have a copy)
-    // file would be combination of -- FileSystem.AppDataDirectory + cv/ or cl/ + fileName -- 
-    // add something that tells user that we've added the job application to db
-    //or something similar
 
     private async Task HandleSaveJobApplication(JobApplication newJob)
     {
@@ -45,13 +52,17 @@
     }
 
 
-    private void ShowJobModal()
+    private void ShowJobModal(JobApplicationDTO? job = null)
     {
+        selectedJob = job; 
         isModalVisible = true; // Show the modal when the button is clicked
+        StateHasChanged(); 
+
     }
 
     private void CloseModal()
     {
         isModalVisible = false; // Close the modal when the user finishes
+        selectedJob = null;
     }
 }

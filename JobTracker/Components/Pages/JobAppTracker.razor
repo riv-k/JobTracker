@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using JobTracker.Models
 @inject JobApplicationDB Database
+@inject IJSRuntime JS
 
 <div class="main-content">
     @* Loading in status containers and population them with job applications *@
@@ -10,7 +11,7 @@
             <p>@container.Status</p>
             @foreach (var job in container.JobApplications)
             {
-                <div class="job-application" draggable="true" >
+                <div class="job-application" draggable="true" @onclick="() => OnJobClick(job)">
                     <h4>@job.CompanyName</h4>
                     <p>@job.JobTitle</p>
                     <p>@job.DateApplied</p>
@@ -23,6 +24,9 @@
 
 @code {
     private List<JobStatusContainer> jobStatusContainers = new();
+
+    [CascadingParameter(Name = "ShowJobModalCallback")]
+    public Action<JobApplicationDTO?>? ShowJobModal { get; set; }
 
     protected override void OnInitialized()
     {
@@ -55,5 +59,17 @@
 
         // Notify the UI that data has changed
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnJobClick(JobApplicationDTO job)
+    {
+        // Call the callback method from parent layout to show the modal with job data
+        if (ShowJobModal == null)
+        {
+            JS.InvokeVoidAsync("alert", "ShowJobModal callback is not available");
+            return;
+        }
+
+        ShowJobModal.Invoke(job);
     }
 }
