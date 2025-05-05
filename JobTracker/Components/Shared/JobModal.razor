@@ -1,103 +1,196 @@
 ﻿@using JobTracker.Models
 
-@if (IsModalVisible){
-    <div class="modal-container">
-        <div class="modal-content-container">
-            <div class="modal-header">
-                <div class="modal-header-left">
-                    <h1 class="modal-header-title">
-                        @(string.IsNullOrEmpty(jobTitleInput) ? "Job Title" : jobTitleInput)
-                    </h1>
+@if (IsModalVisible)
+{ 
+        <div class="modal-container"> 
+            <div class="modal-content-container"> 
+                <div class="modal-header"> 
+                    <div class="modal-header-left"> 
+                        <h1 class="modal-header-title">
+                        @(string.IsNullOrEmpty(jobTitleInput) ? "Job Title" : jobTitleInput) 
+                        </h1>
 
-                    <small>
+                        <small>
                         @(string.IsNullOrEmpty(companyNameInput) ? "Company Name" : companyNameInput)
-                    </small>
-                    <small>
-                        <b>•</b> @statusInput
-                    </small>
-                </div>
-
-                <div class="modal-header-right">
-                    <button class="cancel" @onclick="CloseJobModal">
-                        Cancel
-                    </button>
-                    <button class="save" @onclick="SaveJobModal">
-                        Save
-                    </button>
-                </div>
-            </div>
-
-            <div class="modal-body">
-
-                <div class="hw-row">
-                    <div>
-                        <p>Company Name</p>
-                        <input type="text" class="input" @bind="companyNameInput" placeholder="Company Name" />
+                        </small>
+                        <small>
+                            <b>•</b> @statusInput
+                        </small>
                     </div>
-                    <div>
-                        <p>Job Title</p>
-                        <input type="text" @bind="jobTitleInput" class="input" placeholder="Job Title" />
+
+                    <div class="modal-header-right">
+                        <button class="cancel" @onclick="CloseJobModal">
+                            Cancel
+                        </button>
+                    @if (IsViewMode)
+                    {
+                                <button class="edit" @onclick="SwitchToEditMode">
+                                    Edit
+                                </button>
+                    }
+                    else
+                    {
+                                <button class="save" @onclick="SaveJobModal">
+                                    Save
+                                </button>
+                    }
                     </div>
                 </div>
 
-                <div class="hw-row">
-                    <div>
-                        <p>Location</p>
-                        <input type="text" class="input" @bind="locationInput" placeholder="Location" />
+                <div class="modal-body">
+
+                    <div class="hw-row">
+                        <div>
+                            <p>Company Name</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@companyNameInput</div>
+                        }
+                        else
+                        {
+                                    <input type="text" class="input" @bind="companyNameInput" placeholder="Company Name" />
+                        }
+                        </div>
+                        <div>
+                            <p>Job Title</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@jobTitleInput</div>
+                        }
+                        else
+                        {
+                                    <input type="text" @bind="jobTitleInput" class="input" placeholder="Job Title" />
+                        }
+                        </div>
                     </div>
-                    <div>
-                        <p>Date Applied</p>
-                        <input type="date" @bind="dateAppliedInput" class="input" />
+
+                    <div class="hw-row">
+                        <div>
+                            <p>Location</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@locationInput</div>
+                        }
+                        else
+                        {
+                                    <input type="text" class="input" @bind="locationInput" placeholder="Location" />
+                        }
+                        </div>
+                        <div>
+                            <p>Date Applied</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@(dateAppliedInput?.ToShortDateString() ?? "Not specified")</div>
+                        }
+                        else
+                        {
+                                    <input type="date" @bind="dateAppliedInput" class="input" />
+                        }
+                        </div>
                     </div>
+
+                    <div class="hw-row">
+                        <div>
+                            <p>Status</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@statusInput</div>
+                        }
+                        else
+                        {
+                                    <select class="input" @bind="statusInput" required>
+                                        <option value="" disabled hidden selected>Status</option>
+                                        <option>Interested</option>
+                                        <option>Applied</option>
+                                        <option>Interview</option>
+                                        <option>Offer</option>
+                                        <option>Rejected</option>
+                                    </select>
+                        }
+                        </div>
+                        <div>
+                            <p>Closing Date</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">@(dateCloseInput?.ToShortDateString() ?? "Not specified")</div>
+                        }
+                        else
+                        {
+                                    <input type="date" @bind="dateCloseInput" class="input" />
+                        }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <p>Link</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field">
+                                @if (!string.IsNullOrEmpty(linkInput))
+                                {
+                                                <a href="@linkInput" target="_blank">@linkInput</a>
+                                }
+                                else
+                                {
+                                                <span>Not specified</span>
+                                }
+                                    </div>
+                        }
+                        else
+                        {
+                                    <input type="url" class="input" @bind="linkInput" placeholder="Link" />
+                        }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <p>Description</p>
+                        @if (IsViewMode)
+                        {
+                                    <div class="display-field description">@descriptionInput</div>
+                        }
+                        else
+                        {
+                                    <textarea class="input description" @bind="descriptionInput" placeholder="Job Description"></textarea>
+                        }
+                        </div>
+                    </div>
+
+                    <div class="hw-row">
+                        <div>
+                            <p>CV</p>
+                        @if (IsViewMode && !string.IsNullOrEmpty(JobData?.CVPath))
+                        {
+                                    <div class="display-field">
+                                        <a href="@JobData.CVPath" download>Download CV</a>
+                                    </div>
+                        }
+                        else
+                        {
+                                    <InputFile id="fileInput" class="input" OnChange="HandleCvUpload" />
+                        }
+                        </div>
+                        <div>
+                            <p>Cover Letter</p>
+                        @if (IsViewMode && !string.IsNullOrEmpty(JobData?.CLPath))
+                        {
+                                    <div class="display-field">
+                                        <a href="@JobData.CLPath" download>Download Cover Letter</a>
+                                    </div>
+                        }
+                        else
+                        {
+                                    <InputFile id="fileInput" class="input" OnChange="HandleCoverLetterUpload" />
+                        }
+                        </div>
+                    </div>
+
+
                 </div>
-
-                <div class="hw-row">
-                    <div>
-                        <p>Status</p>
-                        <select class="input" @bind="statusInput" required>
-                            <option value="" disabled hidden selected>Status</option>
-                            <option>Interested</option>
-                            <option>Applied</option>
-                            <option>Interview</option>
-                            <option>Offer</option>
-                            <option>Rejected</option>
-                        </select>
-                    </div>
-                    <div>
-                        <p>Closing Date</p>
-                        <input type="date" @bind="dateCloseInput" class="input" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <p>Link</p>
-                        <input type="url" class="input" @bind="linkInput" placeholder="Link" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div>
-                        <p>Description</p>
-                        <textarea class="input description" @bind="descriptionInput" placeholder="Job Description"></textarea>
-                    </div>
-                </div>
-
-                <div class="hw-row">
-                    <div>
-                        <p>CV</p>
-                        <InputFile id="fileInput" class="input" onchange="HandleCvUpload" />
-                    </div>
-                    <div>
-                        <p>Cover Letter</p>
-                        <InputFile id="fileInput" class="input" onchange="HandleCoverLetterUpload" />
-                    </div>
-                </div>
-
-
             </div>
         </div>
-    </div>
 
 }
 
@@ -106,22 +199,27 @@
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
     [Parameter] public EventCallback<JobApplication> OnSave { get; set; }
-    [Parameter] public JobApplicationDTO? JobData { get; set; } // parameter to recieve job application info/data
-
+    [Parameter] public JobApplicationDTO? JobData { get; set; } // parameter to receive job application info/data
 
     private string companyNameInput = "";
     private string jobTitleInput = "";
     private string statusInput = "Status";
     private string locationInput = "";
-    private DateTime? dateAppliedInput { get; set; } = null;
-    private DateTime? dateCloseInput { get; set; } = null;
+    private DateTime? dateAppliedInput = null;
+    private DateTime? dateCloseInput = null;
     private string linkInput = "";
     private string descriptionInput = "";
     private IBrowserFile? cvFile;
     private IBrowserFile? clFile;
+    // Track if we're in view mode
+    private bool IsViewMode => JobData != null && !IsEditMode;
+    private bool IsEditMode = false;
 
     protected override void OnParametersSet()
     {
+        // Reset edit mode when parameters change
+        IsEditMode = JobData == null;
+
         // When parameters change and JobData is not null, populate form fields
         if (JobData != null)
         {
@@ -133,32 +231,35 @@
             dateCloseInput = JobData.ClosingDate;
             linkInput = JobData.Link;
             descriptionInput = JobData.Description;
+            // Note: CV and CL paths are accessed directly from JobData when needed
         }
     }
+
+    private void SwitchToEditMode()
+    {
+        IsEditMode = true;
+    }
+
     private async Task SaveJobModal()
     {
         var job = new JobApplication( // Create JobApplication Object
             companyNameInput,
             jobTitleInput,
             locationInput,
-            dateAppliedInput ?? DateTime.Now, // Default to currnt date
+            dateAppliedInput ?? DateTime.Now, // Default to current date
             dateCloseInput ?? DateTime.Now.AddDays(14), // Default closing date to 2 weeks from now
             statusInput,
             linkInput,
-            cvFile,  
+            cvFile,
             clFile,
             descriptionInput
-    );
-        // If we're editing an existing job, preserve its ID
-        if (JobData != null && JobData.Id != 0)
-        {
-            // Assuming there's a way to set the ID - implementation depends on JobApplication structure
-            // job.Id = JobData.Id;
-        }
+        );
 
+        // If we're editing an existing job, we need to tell the parent about the ID
+        // This will need to be handled in the MainLayout's HandleSaveJobApplication method
 
         await OnSave.InvokeAsync(job); // Send to parent component -- MainLayout.cs
-        await CloseJobModal(); //Clear inputs + close modal
+        await CloseJobModal(); // Clear inputs + close modal
     }
 
 
@@ -180,13 +281,14 @@
         linkInput = string.Empty;
         dateAppliedInput = null;
         dateCloseInput = null;
+        IsEditMode = false;
     }
 
 
     private void HandleCvUpload(InputFileChangeEventArgs e)
     {
         cvFile = e.File;
-        
+
     }
 
     private void HandleCoverLetterUpload(InputFileChangeEventArgs e)
