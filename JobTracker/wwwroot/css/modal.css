@@ -10,6 +10,7 @@
     justify-content: center; /* Centers horizontally */
     align-items: center;     /* Centers vertically */
 /*    display: none;*/
+
 }
 
 
@@ -22,33 +23,32 @@
     background-color: #DFE8F6;
     border-radius: 15px;
     overflow: hidden;
-    aspect-ratio: 2/5;
+/*    aspect-ratio: 2/5;*/
 }
 
 .modal-header {
     /*display: flex;*/ /* This is a */
     /*justify-content: space-between;*/ /* Game */
     /*align-items: flex-end;*/ /* Changerrrrrrr */
-/*    border: 2px solid black;*/
+    /*    border: 2px solid black;*/
 
     background-color: #3498DB;
     height: 15%;
     justify-content: space-between;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
     color: white;
 }
 
 .modal-header-left {
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-/*    border: 2px solid black;*/
     margin-left: 15px;
+    width: 45%;
+/*    border: 2px solid black;*/
 }
 
 .modal-header-title {
-    width: fit-content;
     margin-bottom: 0px;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 .modal-header-right {
@@ -59,41 +59,40 @@
     gap: 15px;
     justify-content: flex-end;
 }
-.modal-header-right button {
-    color: white;
-    width: 70px;
-    height: 35px;
-    border-radius: 10px;
-}
+    .modal-header-right button {
+        color: white;
+        width: 70px;
+        height: 35px;
+        border-radius: 10px;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
 .cancel {
     background-color: #F44336;
-    color: white;
-    width: 70px;
-    height: 35px;
-    border-radius: 10px;
-    border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
+    .cancel:hover {
+        background-color: #D32F2F;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+.edit {
+    background-color: #FF9800;
+}
+    .edit:hover {
+        background-color: #cf711f; /* slightly darker shade for hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
 .save {
-    background-color: #2ECC71;
-    color: white;
-    width: 70px;
-    height: 35px;
-    border-radius: 10px;
-    border: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+    background-color: #4CAF50;
 }
+    .save:hover {
+        background-color: #27AE60;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.cancel:hover {
-    background-color: #D32F2F;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
-.save:hover {
-    background-color: #27AE60; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
 .modal-body {
     height: 85%;
@@ -126,18 +125,21 @@
 
 .input {
     width: 100%;
-    border: 2px solid #3498DB; 
+    border: 2px solid #3498DB;
     color: #2C3E50;
-    background-color: #ffffff; 
+    background-color: #ffffff;
     outline: none;
+    border-radius: 5px;
+/*        border: 2px solid black;*/
 }
 
 .modal-body p {
-    /*    border: 2px solid black;*/
+/*    border: 2px solid black;*/
     margin: 0px;
     width: auto;
     color: #2C3E50;
     font-size: 15px;
+    font-weight: 600;
 }
 
 ::placeholder, select:invalid {
@@ -145,9 +147,7 @@
     font-size: 15px;
 }
 
-.hw-row, .row {
-/*    border: 2px solid black;*/
-}
+
 .modal-body div {
 /*    border: 2px solid black;*/
     margin-top: 0px;
@@ -160,3 +160,49 @@
     border: none;
     background-color: transparent;
 }
+
+.placeholder-style {
+    color: #A0B8D1 !important;
+}
+
+select option {
+    color: #2C3E50;
+}
+
+select:focus {
+    border-color: #3498DB;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+
+/* New styles for display fields in view mode */
+.display-field {
+/*    border: 2px solid red !important;*/
+    width: 100% !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    .display-field.description {
+        white-space: pre-line;
+        overflow: visible;
+        text-overflow: clip;
+        line-height: 1.5;
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 15px;
+        border-radius: 5px;
+        border: 2px solid #007ACC;
+    }
+
+    .display-field a {
+        color: #3498DB;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .display-field a:hover {
+            color: #2980B9;
+            text-decoration: underline;
+        }

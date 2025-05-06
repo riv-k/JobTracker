@@ -98,8 +98,10 @@
                         }
                         else
                         {
-                                    <select class="input" @bind="statusInput" required>
-                                        <option value="" disabled hidden selected>Status</option>
+                                    <select class="input @(string.IsNullOrEmpty(statusInput) || statusInput == "Status" ? "placeholder-style" : "")"
+                                            @bind="statusInput"
+                                            required>
+                                        <option value="Status" disabled hidden selected>Status</option>
                                         <option>Interested</option>
                                         <option>Applied</option>
                                         <option>Interview</option>
