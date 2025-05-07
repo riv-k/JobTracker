@@ -78,6 +78,43 @@ public class JobApplicationDB
         await database.InsertAsync(dto);
     }
 
+    // Update an existing job application
+    public async Task UpdateJobApplicationAsync(int id, JobApplication app)
+    {
+        await Init();
+
+        // Get the existing job application
+        var existingJob = await GetJobApplicationByIdAsync(id);
+        if (existingJob == null)
+            throw new Exception($"Job application with ID {id} not found.");
+
+        // Save any uploaded files and get local paths
+        string? cvPath = existingJob.CVPath;
+        string? clPath = existingJob.CLPath;
+
+        // If new files are uploaded, save them and update paths
+        if (app.Cv != null)
+            cvPath = await SaveFileToLocalAsync(app.Cv, "cv");
+
+        if (app.Cl != null)
+            clPath = await SaveFileToLocalAsync(app.Cl, "cl");
+
+        // Update the existing record
+        existingJob.CompanyName = app.CompanyName;
+        existingJob.JobTitle = app.JobTitle;
+        existingJob.Status = app.Status;
+        existingJob.Location = app.Location;
+        existingJob.DateApplied = app.DateApplied;
+        existingJob.ClosingDate = app.ClosingDate;
+        existingJob.Link = app.Link;
+        existingJob.Description = app.Description;
+        existingJob.CVPath = cvPath;
+        existingJob.CLPath = clPath;
+
+        await database.UpdateAsync(existingJob);
+    }
+
+
     // Delete a job application by DTO ID
     public async Task<int> DeleteJobApplicationAsync(int id)
     {

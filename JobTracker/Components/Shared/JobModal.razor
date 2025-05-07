@@ -200,8 +200,14 @@
 @code {
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
-    [Parameter] public EventCallback<JobApplication> OnSave { get; set; }
+    [Parameter] public EventCallback<JobSubmission> OnSave { get; set; }
     [Parameter] public JobApplicationDTO? JobData { get; set; } // parameter to receive job application info/data
+
+    // Track if we're in view mode
+    private bool IsViewMode => JobData != null && !IsEditMode;
+    private bool IsEditMode = false;
+
+    private int? existingJobId = null;
 
     private string companyNameInput = "";
     private string jobTitleInput = "";
@@ -213,9 +219,6 @@
     private string descriptionInput = "";
     private IBrowserFile? cvFile;
     private IBrowserFile? clFile;
-    // Track if we're in view mode
-    private bool IsViewMode => JobData != null && !IsEditMode;
-    private bool IsEditMode = false;
 
     protected override void OnParametersSet()
     {
@@ -225,6 +228,7 @@
         // When parameters change and JobData is not null, populate form fields
         if (JobData != null)
         {
+            existingJobId = JobData.Id; // Store the ID of the job being edited
             companyNameInput = JobData.CompanyName;
             jobTitleInput = JobData.JobTitle;
             statusInput = JobData.Status;
@@ -234,6 +238,10 @@
             linkInput = JobData.Link;
             descriptionInput = JobData.Description;
             // Note: CV and CL paths are accessed directly from JobData when needed
+        }
+        else
+        {
+            existingJobId = null; // Reset ID when creating a new job
         }
     }
 
@@ -251,16 +259,18 @@
             dateAppliedInput ?? DateTime.Now, // Default to current date
             dateCloseInput ?? DateTime.Now.AddDays(14), // Default closing date to 2 weeks from now
             statusInput,
-            linkInput,
+            linkInput,  
             cvFile,
             clFile,
             descriptionInput
         );
 
-        // If we're editing an existing job, we need to tell the parent about the ID
-        // This will need to be handled in the MainLayout's HandleSaveJobApplication method
+        // Create a JobSubmission with the job and existing ID (if any)
+        var submission = new JobSubmission(job, existingJobId);
 
-        await OnSave.InvokeAsync(job); // Send to parent component -- MainLayout.cs
+        // Invoke the callback with the submission
+        await OnSave.InvokeAsync(submission);
+
         await CloseJobModal(); // Clear inputs + close modal
     }
 

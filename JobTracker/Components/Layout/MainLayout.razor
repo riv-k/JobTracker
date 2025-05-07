@@ -19,7 +19,7 @@
     </CascadingValue>
 
     <JobModal 
-        IsModalVisible="isModalVisible" 
+        IsModalVisible="isModalVisible"
         CloseModal="CloseModal"
         OnSave="HandleSaveJobApplication"
         JobData="selectedJob" />
@@ -37,12 +37,23 @@
     };
 
 
-    private async Task HandleSaveJobApplication(JobApplication newJob)
+    private async Task HandleSaveJobApplication(JobSubmission submission)
     {
         try
         {
-            await Database.SaveJobApplicationAsync(newJob);
+            if (submission.ExistingJobId.HasValue)
+            {
+                // This is an edit operation
+                await Database.UpdateJobApplicationAsync(submission.ExistingJobId.Value, submission.Job);
+            }
+            else
+            {
+                // This is a create operation
+                await Database.SaveJobApplicationAsync(submission.Job);
+            }
             
+            // Refresh the job list if necessary
+            // You might need to notify the page that displays jobs to refresh
         }
         catch (Exception ex)
         {
