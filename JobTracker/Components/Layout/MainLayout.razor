@@ -13,9 +13,11 @@
     </header>
 
     <CascadingValue Name="ShowJobModalCallback" Value="@ShowJobModalAction" IsFixed="true">
-        <main class="main-content-container">
-            @Body
-        </main>
+        <CascadingValue Name="RegisterRefreshCallBack" Value="(Action<Action>)RegisterRefreshCallback" IsFixed="true">
+            <main class="main-content-container">
+                @Body
+            </main>
+        </CascadingValue>
     </CascadingValue>
 
     <JobModal 
@@ -29,6 +31,7 @@
 @code {
     private bool isModalVisible = false;
     private JobApplicationDTO? selectedJob = null;
+    private Action? RefreshJobListAction;
 
     // Create an Action delegate that can be passed to child components
     private Action<JobApplicationDTO?> ShowJobModalAction => (job) =>
@@ -36,6 +39,10 @@
         ShowJobModal(job);
     };
 
+    public void RegisterRefreshCallback(Action refreshAction)
+    {
+        RefreshJobListAction = refreshAction;
+    }
 
     private async Task HandleSaveJobApplication(JobSubmission submission)
     {
@@ -52,9 +59,9 @@
                 // This is a create operation
                 await Database.SaveJobApplicationAsync(submission.Job);
             }
-            
-            // Refresh the job list if necessary
-            // You might need to notify the page that displays jobs to refresh
+
+            // Refresh the job list 
+            RefreshJobListAction?.Invoke();            
         }
         catch (Exception ex)
         {

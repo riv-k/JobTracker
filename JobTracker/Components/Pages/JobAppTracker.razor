@@ -28,6 +28,9 @@
     [CascadingParameter(Name = "ShowJobModalCallback")]
     public Action<JobApplicationDTO?>? ShowJobModal { get; set; }
 
+    [CascadingParameter(Name = "RegisterRefreshCallback")]
+    public Action<Action>? RegisterRefreshCallback { get; set; }
+
     protected override void OnInitialized()
     {
         // Initialize containers synchronously
@@ -40,8 +43,8 @@
             new JobStatusContainer("Rejected")
         };
 
-        // Fire and forget async loading
-        _ = LoadJobApplicationsAsync();
+        RegisterRefreshCallback?.Invoke(RefreshJobList); // Register with layout
+        _ = LoadJobApplicationsAsync(); // Load jobs
     }
 
     private async Task LoadJobApplicationsAsync()
@@ -59,6 +62,14 @@
 
         // Notify the UI that data has changed
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void RefreshJobList()
+    {
+        foreach (var container in jobStatusContainers)
+            container.JobApplications.Clear();
+
+        _ = LoadJobApplicationsAsync();
     }
 
     private void OnJobClick(JobApplicationDTO job)
