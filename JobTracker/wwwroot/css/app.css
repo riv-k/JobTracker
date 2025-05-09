@@ -13,7 +13,7 @@
 
 .main-page {
     height: calc(100vh - 70px);
-    border-radius: 50px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     overflow: hidden;     
