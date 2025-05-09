@@ -15,12 +15,6 @@ public class JobApplicationDB
 {
     private SQLiteAsyncConnection database;
 
-    //public JobApplicationDB()
-    //{
-    //    // Initialize the database in the background
-    //    _ = Init();
-    //}
-
     private async Task Init()
     {
         if (database != null)
@@ -81,6 +75,7 @@ public class JobApplicationDB
     // Update an existing job application
     public async Task UpdateJobApplicationAsync(int id, JobApplication app)
     {
+        Console.WriteLine("Updating Job Application");
         await Init();
 
         // Get the existing job application
@@ -88,16 +83,45 @@ public class JobApplicationDB
         if (existingJob == null)
             throw new Exception($"Job application with ID {id} not found.");
 
-        // Save any uploaded files and get local paths
-        string? cvPath = existingJob.CVPath;
-        string? clPath = existingJob.CLPath;
+        // Original paths
+        string? originalCvPath = existingJob.CVPath;
+        string? originalClPath = existingJob.CLPath;
 
-        // If new files are uploaded, save them and update paths
-        if (app.Cv != null)
-            cvPath = await SaveFileToLocalAsync(app.Cv, "cv");
+        // New paths (default to original)
+        string? newCvPath = originalCvPath;
+        string? newClPath = originalClPath;
 
-        if (app.Cl != null)
-            clPath = await SaveFileToLocalAsync(app.Cl, "cl");
+        // Handle CV file safely
+        if (app.Cv != null && app.Cv is IBrowserFile cvFile)
+        {
+            try
+            {
+                DeleteFileIfExists(originalCvPath);
+                newCvPath = await SaveFileToLocalAsync(app.Cv, "cv");
+                Console.WriteLine($"New CV path: {newCvPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing CV file: {ex.Message}");
+            }
+        }
+
+
+        // Handle Cover Letter file safely
+        if (app.Cl != null && app.Cl is IBrowserFile clFile)
+        {
+            try
+            {
+                DeleteFileIfExists(originalClPath);
+                newClPath = await SaveFileToLocalAsync(app.Cl, "cl");
+                Console.WriteLine($"New CL path: {newClPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing Cover Letter file: {ex.Message}");
+            }
+        }
+
 
         // Update the existing record
         existingJob.CompanyName = app.CompanyName;
@@ -108,33 +132,77 @@ public class JobApplicationDB
         existingJob.ClosingDate = app.ClosingDate;
         existingJob.Link = app.Link;
         existingJob.Description = app.Description;
-        existingJob.CVPath = cvPath;
-        existingJob.CLPath = clPath;
+        existingJob.CVPath = newCvPath;
+        existingJob.CLPath = newClPath;
 
         await database.UpdateAsync(existingJob);
     }
+
 
 
     // Delete a job application by DTO ID
     public async Task<int> DeleteJobApplicationAsync(int id)
     {
         await Init();
+
+        // Get the job application first to access its file paths
+        var job = await GetJobApplicationByIdAsync(id);
+        if (job != null)
+        {
+            // Delete associated files if they exist
+            DeleteFileIfExists(job.CVPath);
+            DeleteFileIfExists(job.CLPath);
+        }
+
+        // Then delete the database record
         return await database.DeleteAsync<JobApplicationDTO>(id);
     }
 
     // Helper: saves an IBrowserFile to subfolder and returns the file path
     private async Task<string> SaveFileToLocalAsync(IBrowserFile file, string subfolder)
     {
+        if (file == null)
+        {
+            throw new ArgumentNullException(nameof(file));
+        }
+
         var folderPath = Path.Combine(FileSystem.AppDataDirectory, subfolder);
         if (!Directory.Exists(folderPath))
             Directory.CreateDirectory(folderPath);
 
-        var filePath = Path.Combine(folderPath, file.Name);
+        // Generate a unique filename to avoid collisions
+        var fileName = $"{DateTime.Now.Ticks}_{file.Name}";
+        var filePath = Path.Combine(folderPath, fileName);
 
-        using var stream = file.OpenReadStream();
-        using var fs = File.Create(filePath);
-        await stream.CopyToAsync(fs);
+        try
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10485760); // 10MB max
+            using var fs = File.Create(filePath);
+            await stream.CopyToAsync(fs);
+            return filePath;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving file {fileName}: {ex.Message}");
+            throw;
+        }
+    }
 
-        return filePath;
+    // Helper method to safely delete a file if it exists
+    private void DeleteFileIfExists(string? filePath)
+    {
+        if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+        {
+            try
+            {
+                File.Delete(filePath);
+                Console.WriteLine($"Deleted file: {filePath}");
+            }
+            catch (Exception ex)
+            {
+                // Log the error but continue (don't throw)
+                Console.WriteLine($"Error deleting file {filePath}: {ex.Message}");
+            }
+        }
     }
 }

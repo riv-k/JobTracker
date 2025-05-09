@@ -162,30 +162,54 @@
 
                     <div class="hw-row">
                         <div>
-                            <p>CV</p>
-                        @if (IsViewMode && !string.IsNullOrEmpty(JobData?.CVPath))
-                        {
-                                    <div class="display-field">
-                                        <a href="@JobData.CVPath" download>Download CV</a>
-                                    </div>
-                        }
-                        else
-                        {
-                                    <InputFile id="fileInput" class="input" OnChange="HandleCvUpload" />
-                        }
+                            @if (IsViewMode)
+                            {
+                                if (!string.IsNullOrEmpty(JobData?.CVPath))
+                                {
+                                        <p>CV</p>
+                                        <div class="display-field">
+                                            <a href="@JobData.CVPath" download>Download CV</a>
+                                        </div>
+                                }
+                            }
+                            else
+                            {
+                                        <p>CV</p>
+                                        <InputFile id="cvInput" class="input" OnChange="HandleCvUpload" />
+
+                            // user visability -- still shows user their original cv on edit mode
+                                @if (!string.IsNullOrEmpty(JobData?.CVPath))
+                                {
+                                        <div class="display-field">
+                                            <a href="@JobData.CVPath" download>Current CV</a>
+                                        </div>
+                                }
+                            }
                         </div>
                         <div>
-                            <p>Cover Letter</p>
-                        @if (IsViewMode && !string.IsNullOrEmpty(JobData?.CLPath))
-                        {
-                                    <div class="display-field">
-                                        <a href="@JobData.CLPath" download>Download Cover Letter</a>
-                                    </div>
-                        }
-                        else
-                        {
-                                    <InputFile id="fileInput" class="input" OnChange="HandleCoverLetterUpload" />
-                        }
+                            @if (IsViewMode)
+                            {
+                                if (!string.IsNullOrEmpty(JobData?.CLPath))
+                                {
+                                        <p>Cover Letter</p>
+                                        <div class="display-field">
+                                            <a href="@JobData.CLPath" download>Download Cover Letter</a>
+                                        </div>
+                                }
+                            }
+                            else
+                            {
+                                        <p>Cover Letter</p>
+                                        <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" />
+
+                                // user visability -- still shows user their original cl on edit mode
+                                @if (!string.IsNullOrEmpty(JobData?.CLPath))
+                                {
+                                        <div class="display-field">
+                                            <a href="@JobData.CLPath" download>Current Cover Letter</a>
+                                        </div>
+                                }
+                            }
                         </div>
                     </div>
 
@@ -268,12 +292,18 @@
         // Create a JobSubmission with the job and existing ID (if any)
         var submission = new JobSubmission(job, existingJobId);
 
-        // Invoke the callback with the submission
-        await OnSave.InvokeAsync(submission);
-
-        await CloseJobModal(); // Clear inputs + close modal
+        try
+        {
+            await OnSave.InvokeAsync(submission); // Save first
+            await CloseJobModal();                // Then close modal
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Save failed: {ex.Message}");
+            // Optionally show user feedback here
+        }
     }
-
+     
 
     private async Task CloseJobModal()
     {

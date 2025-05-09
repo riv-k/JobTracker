@@ -19,10 +19,10 @@
     </CascadingValue>
 
     <JobModal 
-        IsModalVisible="isModalVisible"
-        CloseModal="CloseModal"
-        OnSave="HandleSaveJobApplication"
-        JobData="selectedJob" />
+    IsModalVisible="isModalVisible"
+    CloseModal="CloseModal"
+    OnSave="HandleSaveJobApplication"
+    JobData="selectedJob" />
 
 </div>
 
@@ -39,6 +39,7 @@
 
     private async Task HandleSaveJobApplication(JobSubmission submission)
     {
+        Console.WriteLine("Handle SaveJobApplication");
         try
         {
             if (submission.ExistingJobId.HasValue)
