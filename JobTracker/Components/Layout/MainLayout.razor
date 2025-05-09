@@ -24,6 +24,7 @@
     IsModalVisible="isModalVisible"
     CloseModal="CloseModal"
     OnSave="HandleSaveJobApplication"
+    OnDelete="HandleDeleteJobApplication"
     JobData="selectedJob" />
 
 </div>
@@ -68,6 +69,12 @@
             await JS.InvokeVoidAsync("alert", $"Error: {ex.Message}");
         }
 
+    }
+
+    private async Task HandleDeleteJobApplication(int id)
+    {
+        await Database.DeleteJobApplicationAsync(id);
+        RefreshJobListAction?.Invoke();
     }
 
 

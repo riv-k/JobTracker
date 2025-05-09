@@ -2,221 +2,226 @@
 
 @if (IsModalVisible)
 { 
-        <div class="modal-container"> 
-            <div class="modal-content-container"> 
-                <div class="modal-header"> 
-                    <div class="modal-header-left"> 
-                        <h1 class="modal-header-title">
+    <div class="modal-container"> 
+        <div class="modal-content-container"> 
+            <div class="modal-header"> 
+                <div class="modal-header-left"> 
+                    <h1 class="modal-header-title">
                         @(string.IsNullOrEmpty(jobTitleInput) ? "Job Title" : jobTitleInput) 
-                        </h1>
+                    </h1>
 
-                        <small>
+                    <small>
                         @(string.IsNullOrEmpty(companyNameInput) ? "Company Name" : companyNameInput)
-                        </small>
-                        <small>
-                            <b>•</b> @statusInput
-                        </small>
-                    </div>
+                    </small>
+                    <small>
+                        <b>•</b> @statusInput
+                    </small>
+                </div>
 
-                    <div class="modal-header-right">
-                        <button class="cancel" @onclick="CloseJobModal">
-                            Cancel
-                        </button>
+                <div class="modal-header-right">
+                    @if (IsViewMode || IsEditMode)
+                    {
+                        <img src="binIcon.svg" alt="Delete" class="bin" @onclick="() => DeleteJobModal(JobData?.Id)" />
+                    }
+
+                    <button class="cancel" @onclick="CloseJobModal">
+                        Cancel
+                    </button>
                     @if (IsViewMode)
                     {
-                                <button class="edit" @onclick="SwitchToEditMode">
-                                    Edit
-                                </button>
+                        <button class="edit" @onclick="SwitchToEditMode">
+                            Edit
+                        </button>
                     }
                     else
                     {
-                                <button class="save" @onclick="SaveJobModal">
-                                    Save
-                                </button>
+                        <button class="save" @onclick="SaveJobModal">
+                            Save
+                        </button>
                     }
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="hw-row">
+                    <div>
+                        <p>Company Name</p>
+                        @if (IsViewMode)
+                        {
+                            <div class="display-field">@companyNameInput</div>
+                        }
+                        else
+                        {
+                            <input type="text" class="input" @bind="companyNameInput" placeholder="Company Name" />
+                        }
+                    </div>
+                    <div>
+                        <p>Job Title</p>
+                        @if (IsViewMode)
+                        {
+                            <div class="display-field">@jobTitleInput</div>
+                        }
+                        else
+                        {
+                            <input type="text" @bind="jobTitleInput" class="input" placeholder="Job Title" />
+                        }
                     </div>
                 </div>
 
-                <div class="modal-body">
-
-                    <div class="hw-row">
-                        <div>
-                            <p>Company Name</p>
+                <div class="hw-row">
+                    <div>
+                        <p>Location</p>
                         @if (IsViewMode)
                         {
-                                    <div class="display-field">@companyNameInput</div>
+                            <div class="display-field">@locationInput</div>
                         }
                         else
                         {
-                                    <input type="text" class="input" @bind="companyNameInput" placeholder="Company Name" />
+                            <input type="text" class="input" @bind="locationInput" placeholder="Location" />
                         }
-                        </div>
-                        <div>
-                            <p>Job Title</p>
-                        @if (IsViewMode)
-                        {
-                                    <div class="display-field">@jobTitleInput</div>
-                        }
-                        else
-                        {
-                                    <input type="text" @bind="jobTitleInput" class="input" placeholder="Job Title" />
-                        }
-                        </div>
                     </div>
-
-                    <div class="hw-row">
-                        <div>
-                            <p>Location</p>
+                    <div>
+                        <p>Date Applied</p>
                         @if (IsViewMode)
                         {
-                                    <div class="display-field">@locationInput</div>
+                            <div class="display-field">@(dateAppliedInput?.ToShortDateString() ?? "Not specified")</div>
                         }
                         else
                         {
-                                    <input type="text" class="input" @bind="locationInput" placeholder="Location" />
+                            <input type="date" @bind="dateAppliedInput" class="input" />
                         }
-                        </div>
-                        <div>
-                            <p>Date Applied</p>
-                        @if (IsViewMode)
-                        {
-                                    <div class="display-field">@(dateAppliedInput?.ToShortDateString() ?? "Not specified")</div>
-                        }
-                        else
-                        {
-                                    <input type="date" @bind="dateAppliedInput" class="input" />
-                        }
-                        </div>
                     </div>
+                </div>
 
-                    <div class="hw-row">
-                        <div>
-                            <p>Status</p>
+                <div class="hw-row">
+                    <div>
+                        <p>Status</p>
                         @if (IsViewMode)
                         {
-                                    <div class="display-field">@statusInput</div>
+                            <div class="display-field">@statusInput</div>
                         }
                         else
                         {
-                                    <select class="input @(string.IsNullOrEmpty(statusInput) || statusInput == "Status" ? "placeholder-style" : "")"
-                                            @bind="statusInput"
-                                            required>
-                                        <option value="Status" disabled hidden selected>Status</option>
-                                        <option>Interested</option>
-                                        <option>Applied</option>
-                                        <option>Interview</option>
-                                        <option>Offer</option>
-                                        <option>Rejected</option>
-                                    </select>
+                            <select class="input @(string.IsNullOrEmpty(statusInput) || statusInput == "Status" ? "placeholder-style" : "")"
+                            @bind="statusInput"
+                            required>
+                                <option value="Status" disabled hidden selected>Status</option>
+                                <option>Interested</option>
+                                <option>Applied</option>
+                                <option>Interview</option>
+                                <option>Offer</option>
+                                <option>Rejected</option>
+                            </select>
                         }
-                        </div>
-                        <div>
-                            <p>Closing Date</p>
-                        @if (IsViewMode)
-                        {
-                                    <div class="display-field">@(dateCloseInput?.ToShortDateString() ?? "Not specified")</div>
-                        }
-                        else
-                        {
-                                    <input type="date" @bind="dateCloseInput" class="input" />
-                        }
-                        </div>
                     </div>
-
-                    <div class="row">
-                        <div>
-                            <p>Link</p>
+                    <div>
+                        <p>Closing Date</p>
                         @if (IsViewMode)
                         {
-                                    <div class="display-field">
+                            <div class="display-field">@(dateCloseInput?.ToShortDateString() ?? "Not specified")</div>
+                        }
+                        else
+                        {
+                            <input type="date" @bind="dateCloseInput" class="input" />
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <p>Link</p>
+                        @if (IsViewMode)
+                        {
+                            <div class="display-field">
                                 @if (!string.IsNullOrEmpty(linkInput))
                                 {
-                                                <a href="@linkInput" target="_blank">@linkInput</a>
+                                    <a href="@linkInput" target="_blank">@linkInput</a>
                                 }
                                 else
                                 {
-                                                <span>Not specified</span>
+                                    <span>Not specified</span>
                                 }
-                                    </div>
+                            </div>
                         }
                         else
                         {
-                                    <input type="url" class="input" @bind="linkInput" placeholder="Link" />
+                            <input type="url" class="input" @bind="linkInput" placeholder="Link" />
                         }
-                        </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div>
-                            <p>Description</p>
+                <div class="row">
+                    <div>
+                        <p>Description</p>
                         @if (IsViewMode)
                         {
-                                    <div class="display-field description">@descriptionInput</div>
+                            <div class="display-field description">@descriptionInput</div>
                         }
                         else
                         {
-                                    <textarea class="input description" @bind="descriptionInput" placeholder="Job Description"></textarea>
+                            <textarea class="input description" @bind="descriptionInput" placeholder="Job Description"></textarea>
                         }
-                        </div>
                     </div>
+                </div>
 
-                    <div class="hw-row">
-                        <div>
-                            @if (IsViewMode)
+                <div class="hw-row">
+                    <div>
+                        @if (IsViewMode)
+                        {
+                            if (!string.IsNullOrEmpty(JobData?.CVPath))
                             {
-                                if (!string.IsNullOrEmpty(JobData?.CVPath))
-                                {
-                                        <p>CV</p>
-                                        <div class="display-field">
-                                            <a href="@JobData.CVPath" download>Download CV</a>
-                                        </div>
-                                }
+                                <p>CV</p>
+                                <div class="display-field">
+                                    <a href="@JobData.CVPath" download>Download CV</a>
+                                </div>
                             }
-                            else
-                            {
-                                        <p>CV</p>
-                                        <InputFile id="cvInput" class="input" OnChange="HandleCvUpload" />
+                        }
+                        else
+                        {
+                            <p>CV</p>
+                            <InputFile id="cvInput" class="input" OnChange="HandleCvUpload" />
 
                             // user visability -- still shows user their original cv on edit mode
-                                @if (!string.IsNullOrEmpty(JobData?.CVPath))
-                                {
-                                        <div class="display-field">
-                                            <a href="@JobData.CVPath" download>Current CV</a>
-                                        </div>
-                                }
-                            }
-                        </div>
-                        <div>
-                            @if (IsViewMode)
+                            @if (!string.IsNullOrEmpty(JobData?.CVPath))
                             {
-                                if (!string.IsNullOrEmpty(JobData?.CLPath))
-                                {
-                                        <p>Cover Letter</p>
-                                        <div class="display-field">
-                                            <a href="@JobData.CLPath" download>Download Cover Letter</a>
-                                        </div>
-                                }
+                                <div class="display-field">
+                                    <a href="@JobData.CVPath" download>Current CV</a>
+                                </div>
                             }
-                            else
-                            {
-                                        <p>Cover Letter</p>
-                                        <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" />
-
-                                // user visability -- still shows user their original cl on edit mode
-                                @if (!string.IsNullOrEmpty(JobData?.CLPath))
-                                {
-                                        <div class="display-field">
-                                            <a href="@JobData.CLPath" download>Current Cover Letter</a>
-                                        </div>
-                                }
-                            }
-                        </div>
+                        }
                     </div>
+                    <div>
+                        @if (IsViewMode)
+                        {
+                            if (!string.IsNullOrEmpty(JobData?.CLPath))
+                            {
+                                <p>Cover Letter</p>
+                                <div class="display-field">
+                                    <a href="@JobData.CLPath" download>Download Cover Letter</a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>Cover Letter</p>
+                            <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" />
 
-
+                            // user visability -- still shows user their original cl on edit mode
+                            @if (!string.IsNullOrEmpty(JobData?.CLPath))
+                            {
+                                <div class="display-field">
+                                    <a href="@JobData.CLPath" download>Current Cover Letter</a>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
+
+
             </div>
         </div>
+    </div>
 
 }
 
@@ -225,6 +230,7 @@
     [Parameter] public bool IsModalVisible { get; set; } // Controls modal visibility
     [Parameter] public EventCallback CloseModal { get; set; } // Event to close the modal
     [Parameter] public EventCallback<JobSubmission> OnSave { get; set; }
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
     [Parameter] public JobApplicationDTO? JobData { get; set; } // parameter to receive job application info/data
 
     // Track if we're in view mode
@@ -303,7 +309,7 @@
             // Optionally show user feedback here
         }
     }
-     
+
 
     private async Task CloseJobModal()
     {
@@ -336,6 +342,16 @@
     private void HandleCoverLetterUpload(InputFileChangeEventArgs e)
     {
         clFile = e.File;
+    }
+
+    private async Task DeleteJobModal(int? id)
+    {
+        if (id != null)
+        {
+            await OnDelete.InvokeAsync((int) id);
+        }
+
+        await CloseJobModal();
     }
 
 }
