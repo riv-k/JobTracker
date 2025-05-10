@@ -167,6 +167,7 @@
 
                 <div class="hw-row">
                     <div>
+
                         @if (IsViewMode)
                         {
                             if (!string.IsNullOrEmpty(JobData?.CVPath))
@@ -177,11 +178,19 @@
                                 </div>
                             }
                         }
-                        else
+
+                        @* ik it looks ugly but lemme cook *@
+                        @* REFACTORRRRRRRRRRRRRRRRRRRRR THISSSSSSSSSSSSS*@
+
+                        @if (!IsViewMode)
                         {
                             <p>CV</p>
-                            <InputFile id="cvInput" class="input" OnChange="HandleCvUpload" />
+                        }
 
+                        <InputFile id="cvInput" class="input" OnChange="HandleCvUpload" style="@(!IsViewMode ? "" : "display: none;")" />
+
+                        @if (!IsViewMode)
+                        {
                             // user visability -- still shows user their original cv on edit mode
                             @if (!string.IsNullOrEmpty(JobData?.CVPath))
                             {
@@ -192,6 +201,7 @@
                         }
                     </div>
                     <div>
+
                         @if (IsViewMode)
                         {
                             if (!string.IsNullOrEmpty(JobData?.CLPath))
@@ -202,11 +212,19 @@
                                 </div>
                             }
                         }
-                        else
+
+                        @* ik it looks ugly but lemme cook *@
+                        @* REFACTORRRRRRRRRRRRRRRRRRRRR THISSSSSSSSSSSSS*@
+
+                        @if (!IsViewMode)
                         {
                             <p>Cover Letter</p>
-                            <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" />
+                        }
 
+                        <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" style="@(!IsViewMode ? "" : "display: none;")" />
+
+                        @if (!IsViewMode)
+                        {
                             // user visability -- still shows user their original cl on edit mode
                             @if (!string.IsNullOrEmpty(JobData?.CLPath))
                             {
@@ -215,6 +233,7 @@
                                 </div>
                             }
                         }
+
                     </div>
                 </div>
 
