@@ -1,4 +1,7 @@
 ﻿@using JobTracker.Models
+@inject IJSRuntime JS
+@using Microsoft.Maui.ApplicationModel
+@using Microsoft.Maui.Storage
 
 @if (IsModalVisible)
 { 
@@ -174,7 +177,7 @@
                             {
                                 <p>CV</p>
                                 <div class="display-field">
-                                    <a href="@JobData.CVPath" download>Download CV</a>
+                                    <button @onclick="OpenCVFile" class="btn btn-primary">Open CV</button>
                                 </div>
                             }
                         }
@@ -195,7 +198,7 @@
                             @if (!string.IsNullOrEmpty(JobData?.CVPath))
                             {
                                 <div class="display-field">
-                                    <a href="@JobData.CVPath" download>Current CV</a>
+                                    <button @onclick="OpenCVFile" class="btn btn-primary">Open CV</button>
                                 </div>
                             }
                         }
@@ -208,7 +211,7 @@
                             {
                                 <p>Cover Letter</p>
                                 <div class="display-field">
-                                    <a href="@JobData.CLPath" download>Download Cover Letter</a>
+                                    <button @onclick="OpenCLFile" class="btn btn-primary">Open CL</button>
                                 </div>
                             }
                         }
@@ -229,7 +232,7 @@
                             @if (!string.IsNullOrEmpty(JobData?.CLPath))
                             {
                                 <div class="display-field">
-                                    <a href="@JobData.CLPath" download>Current Cover Letter</a>
+                                    <button @onclick="OpenCLFile" class="btn btn-primary">Open CL</button>
                                 </div>
                             }
                         }
@@ -348,6 +351,7 @@
         linkInput = string.Empty;
         dateAppliedInput = null;
         dateCloseInput = null;
+        existingJobId = null;
         IsEditMode = false;
     }
 
@@ -371,6 +375,56 @@
         }
 
         await CloseJobModal();
+    }
+
+    private async Task OpenCVFile()
+    {
+        try
+        {
+            // Check if file exists
+            if (!File.Exists(JobData?.CVPath))
+            {
+                await JS.InvokeVoidAsync("alert", "File not found.");
+                return;
+            }
+
+            // Try to open the file using the system's default application
+            #if WINDOWS || MACCATALYST || IOS || ANDROID
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(JobData.CVPath)
+            });
+            #endif
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Unable to open file: {ex.Message}");
+        }
+    }
+
+    private async Task OpenCLFile()
+    {
+        try
+        {
+            // Check if file exists
+            if (!File.Exists(JobData?.CLPath))
+            {
+                await JS.InvokeVoidAsync("alert", "File not found.");
+                return;
+            }
+
+            // Try to open the file using the system's default application
+            #if WINDOWS || MACCATALYST || IOS || ANDROID
+            await Launcher.OpenAsync(new OpenFileRequest
+            {
+                File = new ReadOnlyFile(JobData.CLPath)
+            });
+            #endif
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Unable to open file: {ex.Message}");
+        }
     }
 
 }
