@@ -72,7 +72,23 @@ The fix was pretty straightforward: instead of conditionally rendering `<InputFi
 ```
 
 # What I’d Do Differently
-_TODO_
+## Plan more
+For this project, I started off by writing down the requirements — what features did I want the app to have? What data should I be storing? How should I store it? Stuff like that.
+
+With some experience from my Human-Computer Interaction course at uni, I decided to design the UI in Figma first, so I wouldn’t have to constantly change the design while building the app.
+
+What I _didn’t_ do was properly plan out the architecture — things like what components talk to what, how services should communicate with each other, and what responsibilities each part of the app should have. I think this was also part of the reason why the project took so long to finish — as I ended up having to make those decisions on the fly.
+
+## Choosing a Project
+This was actually advice that was given to me — to choose a project that aligns with my interests, so that I’d stay motivated to work on it over a longer period of time. The second part of the advice was to make it a bit beefy — something that lets you dabble in full-stack development and integrate third-party APIs or services, to show that you're comfortable bringing external tools into your application.
+
+It’s and advice I’ll definitely keep in mind, and hopefully my next project will align even more with what I enjoy :)
+
+## CI/CD GitHub Actions, and Testing
+These are definitely areas I’m still lacking in. I didn’t really set up any CI/CD pipeline or write proper tests for this project, but I think for my next one, I want to focus on using both so I can get more comfortable with them and actually understand how they fit into a real workflow.
+
+## Depth >> Breadth
+Another piece of advice I got was to go deep into a few tools and technologies instead of learning surface-level stuff about a bunch of them. So with that in mind, I think I’ll try to really build proficiency in 1–2 languages, frameworks, and libraries — get more comfortable and confident with the ones I enjoy using.
 
 # Resources
 _TODO_
