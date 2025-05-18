@@ -56,6 +56,9 @@ At university, we used `EntityFrameworkCore` to work with SQLite, which involved
 application. For this application we used the `sqlite-net-pcl` package, WHICH DID NOT REQUIRE INITIAL MIGRATIONS, and so, everytime I went to add initial migrations, I was met with errors,
 which made me think I was doing everything wrong. That led to deleting progress, commits, and redoing things a bunch of times. This is also the main reason why it took me so LOOOONG TO FINISH THIS PROJECT. Anyways, we live and we learn :')
 
+## Error with updating the Cv/Cl Files
+_TODO_
+
 # What I’d Do Differently
 _TODO_
 
