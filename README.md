@@ -91,4 +91,9 @@ These are definitely areas I’m still lacking in. I didn’t really set up any 
 Another piece of advice I got was to go deep into a few tools and technologies instead of learning surface-level stuff about a bunch of them. So with that in mind, I think I’ll try to really build proficiency in 1–2 languages, frameworks, and libraries — get more comfortable and confident with the ones I enjoy using.
 
 # Resources
-_TODO_
+- [Link Text](https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-9.0)
+- [Link Text](https://learn.microsoft.com/en-us/dotnet/maui/data-cloud/database-sqlite?view=net-maui-9.0)
+- [Link Text](https://learn.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-8.0)
+- [Link Text](https://www.youtube.com/watch?v=oGimRuw2KVg&list=PLdo4fOcmZ0oU6AgjUbyztrhnzGVFuN6ij)
+- [Link Text](https://stackoverflow.com/questions/65973850/cannot-read-property-blazorfilesbyid-of-null-error-with-blazor-inputfile-co)
+
