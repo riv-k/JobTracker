@@ -57,7 +57,19 @@ application. For this application we used the `sqlite-net-pcl` package, WHICH DI
 which made me think I was doing everything wrong. That led to deleting progress, commits, and redoing things a bunch of times. This is also the main reason why it took me so LOOOONG TO FINISH THIS PROJECT. Anyways, we live and we learn :')
 
 ## Error with updating the Cv/Cl Files
-_TODO_
+Now, this makes no sense to me either, but I’ll try to explain. Updating the other fields of my job application worked fine — the only thing that kept failing was when I tried to update the CV/CL files.
+
+How did I know it failed? Well, every time I tried updating the CV/CL, the exception from the `try-catch` block in `HandleSaveJobApplication` would get thrown. Once I fixed that part, I noticed that the file paths stored in the DB weren’t updating, and the files saved locally to the project were corrupt and unopenable.
+
+So, how did I solve this? I copied and pasted the error into Google (and ChatGPT :<) — and found out that this bug was happening because we were conditionally rendering `<InputFile>`.
+
+Now, this didn’t make sense to me. I was like, _"Wait, don’t we also conditionally render it when we create a job application? So why does it only break when we update one?"_ Still don’t know the answer to that. But hey — if it works, it works.
+
+The fix was pretty straightforward: instead of conditionally rendering `<InputFile>`, we always keep it in the DOM, and just toggle its visibility based on what mode we’re in (Create / Viewing / Editing):
+
+```html
+<InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" style="@(!IsViewMode ? "" : "display: none;")" /> 
+```
 
 # What I’d Do Differently
 _TODO_
