@@ -91,9 +91,9 @@ These are definitely areas I’m still lacking in. I didn’t really set up any 
 Another piece of advice I got was to go deep into a few tools and technologies instead of learning surface-level stuff about a bunch of them. So with that in mind, I think I’ll try to really build proficiency in 1–2 languages, frameworks, and libraries — get more comfortable and confident with the ones I enjoy using.
 
 # Resources
-- [Link Text](https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-9.0)
-- [Link Text](https://learn.microsoft.com/en-us/dotnet/maui/data-cloud/database-sqlite?view=net-maui-9.0)
-- [Link Text](https://learn.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-8.0)
-- [Link Text](https://www.youtube.com/watch?v=oGimRuw2KVg&list=PLdo4fOcmZ0oU6AgjUbyztrhnzGVFuN6ij)
-- [Link Text](https://stackoverflow.com/questions/65973850/cannot-read-property-blazorfilesbyid-of-null-error-with-blazor-inputfile-co)
+- [Microsoft Tutorial – Build a Blazor Hybrid App with .NET MAUI](https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-9.0) - _Step-by-step guide I used to get started with setting up a Blazor MAUI app._
+- [Microsoft Docs – Working with SQLite in .NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/data-cloud/database-sqlite?view=net-maui-9.0) - _Helped me understand how to use sqlite-net-pcl for local data storage without EF Core._
+- [Microsoft Docs – File Uploads in Blazor](https://learn.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-8.0) - _Reference for how to handle file uploads using <InputFile> in Blazor._
+- [Blazor Hybrid for Beginners](https://www.youtube.com/watch?v=oGimRuw2KVg&list=PLdo4fOcmZ0oU6AgjUbyztrhnzGVFuN6ij) - _A beginner-friendly series by James Montemagno that helped me understand how to build cross-platform apps using Blazor Hybrid and .NET MAUI._
+- [StackOverflow – “blazorfilesbyid of null” Error Fix](https://stackoverflow.com/questions/65973850/cannot-read-property-blazorfilesbyid-of-null-error-with-blazor-inputfile-co) - _Helped me resolve the weird file corruption bug caused by conditionally rendering `<InputFile>.`_
 
