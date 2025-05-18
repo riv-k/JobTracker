@@ -1,7 +1,7 @@
 # Motivation
-Most, people use Excel for tracking thier job application, but I on the other hand decided to use Google Docs. Looking back, I probably should’ve used Excel too... but oh well, it is what it is.
+Most people use Excel for tracking their job application, but I on the other hand decided to use Google Docs. Looking back, I probably should’ve used Excel too... but oh well, it is what it is.
 
-Trying to keep track of everything in Docs was pretty tough, and at the time I didn’t have many personal projects to show. So I thought, why not make a simple Job Tracker!? And well, thats exactly what I did.
+Trying to keep track of everything in Docs was pretty tough, and at the time I didn’t have many personal projects to show. So I thought, why not make a simple Job Tracker!? And well, that's exactly what I did.
 Now, it took me longer than expected to finish, but one of my goals (and something a recruiter also recommended) was to stay consistent — to try and do a little something each day.
 
 Also, since I learned full-stack development at uni using .NET and C#, I figured this would be a good chance to dive deeper into it.
@@ -15,7 +15,46 @@ Welp, that's the gist of it :)
 - Expand/collapse each job card to see all the details — including the CV and cover letter submitted  
 
 # What I Learned
-_TODO_
+Not going to lie, I thought I would breeze through this project, but I actually learnt a lot. 
+
+## Blazor Hybrid 
+This was my first time working with Blazor Hybrid (ngl I still don’t fully know what that means), but I know it’s component-based, it reminds me of React, and it’s used for building cross-platform desktop/mobile apps.
+
+ I also had to get used to the "flow" of the project. What I mean is: I had to understand what made a specific page the landing page when the app starts, what `@Body` does, why the default route is `/`, and so on. These were the kinds of questions I kept asking myself — the *hows* and *whys* behind what made things work. 🤯
+
+## @bind
+Super useful! `@bind` is a two-way data binding directive, which lets us sync a variable with an input element. This made it *extremely* easy to collect form data from the Job Modal and save it to the database.
+
+Since it’s two-way, updating the variable updates the UI, and vice versa. That meant I could also **populate the modal with an existing job application** — making the component reusable for editing!
+
+## Passing data from a parent to a child component - Parameters
+Now that I understand it, passing data to a child component is pretty straightforward: add a `[Parameter]` in the child, and bind a value to it in the parent. Bam — data = passed!
+- Alternatively, I could’ve used a shared service, but this worked fine.
+
+## Passing data from the child to the parent component - EventCallBack
+This one was a bit trickier. You define an `EventCallback<T>` in the child component, and in the parent you bind a function to it. Then, from the child, you call `VarName.InvokeAsync(...)`, and it triggers the parent’s function.
+It’s a clean way to send data or events from the child back to the parent, like when I wanted to close the modal or pass a Job application so that it could be saved to the database.
+
+## CascadingParameter
+Im still understanding this, but from what I know, CascadingParameter allows descendant components to use values from the parent component (meaning that the component doesn't have to be a direct child of the parent component), the values
+can be functions, values, services, objects, etc, the key point of CascadingParameter is that it enables sharing values from parent to child deeply in the tree, even if they're not direct children.
+
+I used this to pass data from the JobAppTracker page which holds all the job applications, to the parent component - MainLayout, where the Job Modal is, so that we can open the modal filled with information relating to a specific 
+job application.
+
+```text
+MainLayout
+├── JobAppTracker
+└── JobModal
+```
+
+The Hierarchy looks something like above, since JobAppTracker and JobModal aren't directly connected, and i'm not using a shared service to handle passing data between components, using the method explained above seemed like the next 
+best alternative.
+
+## Integrating SQLite database
+At university, we used `EntityFrameworkCore` to work with SQLite, which involved initial migrations. So naturally, I tried doing the same here... which is essentially what tripped me up when trying to integrate a sqlite DB in this 
+application. For this application we used the `sqlite-net-pcl` package, WHICH DID NOT REQUIRE INITIAL MIGRATIONS, and so, everytime I went to add initial migrations, I was met with errors,
+which made me think I was doing everything wrong. That led to deleting progress, commits, and redoing things a bunch of times. This is also the main reason why it took me so LOOOONG TO FINISH THIS PROJECT. Anyways, we live and we learn :')
 
 # What I’d Do Differently
 _TODO_
