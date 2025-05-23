@@ -8,11 +8,63 @@ Also, since I learned full-stack development at uni using .NET and C#, I figured
 
 Welp, that's the gist of it :)
 
+---
 
 # Features 
 - Create, update, and delete job applications  
 - View applications by status (Interested, Applied, Interview, Offer, Rejected)  
 - Expand/collapse each job card to see all the details — including the CV and cover letter submitted  
+
+---
+
+# How to Use This Like a Real Windows App
+You can turn this into a proper double-clickable desktop app on Windows, no Microsoft Store required.
+
+## One-Time Setup
+### 1. Clone the repo
+
+Open a terminal and run:
+```bash
+git clone https://github.com/riv-k/JobTracker.git
+cd JobTracker
+```
+
+### 2. Publish it
+
+Open a terminal in the root of the project and run:
+```bash
+dotnet publish -f net8.0-windows10.0.19041.0 -c Release -r win-x64 --self-contained true /p:WindowsPackageType=None
+```
+
+Once it finishes, you'll find the .exe here:
+```bash
+JobTracker/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/
+```
+
+Look for `JobTracker.exe`.
+
+### 3. Create a Desktop Shortcut
+- Right-click `JobTracker.exe`
+- Select **Send to → Desktop (create shortcut)**
+- Done! You can now double-click it like any regular app :)
+
+## What If I Update the Code?
+If you want the changes to show up in your shortcut:
+
+### 1. Re-run the publish command:
+```bash
+dotnet publish -f net8.0-windows10.0.19041.0 -c Release -r win-x64 --self-contained true /p:WindowsPackageType=None
+```
+
+### 2. Go back to:
+```bash
+JobTracker/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/
+```
+
+### 3. Replace the old `JobTracker.exe` with the new one in the same location your shortcut is pointing to.
+(Or just delete the old shortcut and make a new one from the updated .exe)
+
+---
 
 # What I Learned
 Not going to lie, I thought I would breeze through this project, but I actually learnt a lot. 
@@ -71,6 +123,8 @@ The fix was pretty straightforward: instead of conditionally rendering `<InputFi
 <InputFile id="clInput" class="input" OnChange="HandleCoverLetterUpload" style="@(!IsViewMode ? "" : "display: none;")" /> 
 ```
 
+---
+
 # What I’d Do Differently
 ## Plan more
 For this project, I started off by writing down the requirements — what features did I want the app to have? What data should I be storing? How should I store it? Stuff like that.
@@ -90,10 +144,15 @@ These are definitely areas I’m still lacking in. I didn’t really set up any 
 ## Depth >> Breadth
 Another piece of advice I got was to go deep into a few tools and technologies instead of learning surface-level stuff about a bunch of them. So with that in mind, I think I’ll try to really build proficiency in 1–2 languages, frameworks, and libraries — get more comfortable and confident with the ones I enjoy using.
 
+---
+
 # Resources
 - [Microsoft Tutorial – Build a Blazor Hybrid App with .NET MAUI](https://learn.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-9.0) - _Step-by-step guide I used to get started with setting up a Blazor MAUI app._
 - [Microsoft Docs – Working with SQLite in .NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/data-cloud/database-sqlite?view=net-maui-9.0) - _Helped me understand how to use sqlite-net-pcl for local data storage without EF Core._
 - [Microsoft Docs – File Uploads in Blazor](https://learn.microsoft.com/en-us/aspnet/core/blazor/file-uploads?view=aspnetcore-8.0) - _Reference for how to handle file uploads using <InputFile> in Blazor._
 - [Blazor Hybrid for Beginners](https://www.youtube.com/watch?v=oGimRuw2KVg&list=PLdo4fOcmZ0oU6AgjUbyztrhnzGVFuN6ij) - _A beginner-friendly series by James Montemagno that helped me understand how to build cross-platform apps using Blazor Hybrid and .NET MAUI._
 - [StackOverflow – “blazorfilesbyid of null” Error Fix](https://stackoverflow.com/questions/65973850/cannot-read-property-blazorfilesbyid-of-null-error-with-blazor-inputfile-co) - _Helped me resolve the weird file corruption bug caused by conditionally rendering `<InputFile>.`_
+
+:)
+
 
